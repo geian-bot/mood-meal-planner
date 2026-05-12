@@ -5,15 +5,36 @@ export default function Recipes() {
   const [meals, setMeals] = useState([]);
   const [selectedMeal, setSelectedMeal] = useState(null);
 
+  const [currentPage, setCurrentPage] = useState(1);
+  const mealsPerPage = 8;
+
   const { addMeal } = useContext(MealContext);
 
+  // FETCH MORE RECIPES (categories)
   useEffect(() => {
-    fetch("https://www.themealdb.com/api/json/v1/1/search.php?s=")
-      .then((res) => res.json())
-      .then((data) => {
-        setMeals(data.meals || []);
-      });
+    const categories = ["Chicken", "Beef", "Seafood", "Vegetarian"];
+
+    Promise.all(
+      categories.map((cat) =>
+        fetch(
+          `https://www.themealdb.com/api/json/v1/1/filter.php?c=${cat}`
+        ).then((res) => res.json())
+      )
+    ).then((results) => {
+      const combined = results.flatMap((r) => r.meals || []);
+      setMeals(combined);
+    });
   }, []);
+
+  // OPEN FULL RECIPE (FIXED: lookup API)
+  const openMeal = async (meal) => {
+    const res = await fetch(
+      `https://www.themealdb.com/api/json/v1/1/lookup.php?i=${meal.idMeal}`
+    );
+
+    const data = await res.json();
+    setSelectedMeal(data.meals[0]);
+  };
 
   const handleAdd = (meal) => {
     addMeal({
@@ -22,12 +43,27 @@ export default function Recipes() {
     });
   };
 
+  // PAGINATION LOGIC
+  const indexOfLastMeal = currentPage * mealsPerPage;
+  const indexOfFirstMeal = indexOfLastMeal - mealsPerPage;
+  const currentMeals = meals.slice(indexOfFirstMeal, indexOfLastMeal);
+
+  const totalPages = Math.ceil(meals.length / mealsPerPage);
+
+  // WINDOWED PAGINATION (10 pages at a time)
+  const pageWindowSize = 10;
+
+  const startPage =
+    Math.floor((currentPage - 1) / pageWindowSize) * pageWindowSize + 1;
+
+  const endPage = Math.min(startPage + pageWindowSize - 1, totalPages);
+
   return (
     <div>
       <h1>Recipes</h1>
 
       {/* LIST */}
-      {meals.slice(0, 10).map((meal) => (
+      {currentMeals.map((meal) => (
         <div
           key={meal.idMeal}
           style={{
@@ -40,9 +76,8 @@ export default function Recipes() {
 
           <img src={meal.strMealThumb} width="150" />
 
-          {/* ACTION BUTTONS */}
           <div style={{ marginTop: "10px" }}>
-            <button onClick={() => setSelectedMeal(meal)}>
+            <button onClick={() => openMeal(meal)}>
               View Recipe
             </button>
 
@@ -55,6 +90,58 @@ export default function Recipes() {
           </div>
         </div>
       ))}
+
+      {/* PAGINATION */}
+      <div style={{ marginTop: "20px" }}>
+        {/* PREV WINDOW */}
+        <button
+          onClick={() =>
+            setCurrentPage(Math.max(startPage - pageWindowSize, 1))
+          }
+          disabled={startPage === 1}
+        >
+          Prev
+        </button>
+
+        {/* PAGE NUMBERS */}
+        {Array.from(
+          { length: endPage - startPage + 1 },
+          (_, index) => {
+            const pageNumber = startPage + index;
+
+            return (
+              <button
+                key={pageNumber}
+                onClick={() => setCurrentPage(pageNumber)}
+                style={{
+                  margin: "5px",
+                  padding: "5px 10px",
+                  backgroundColor:
+                    currentPage === pageNumber ? "black" : "white",
+                  color:
+                    currentPage === pageNumber ? "white" : "black",
+                  border: "1px solid black",
+                  cursor: "pointer",
+                }}
+              >
+                {pageNumber}
+              </button>
+            );
+          }
+        )}
+
+        {/* NEXT WINDOW */}
+        <button
+          onClick={() =>
+            setCurrentPage(
+              Math.min(startPage + pageWindowSize, totalPages)
+            )
+          }
+          disabled={endPage === totalPages}
+        >
+          Next
+        </button>
+      </div>
 
       {/* MODAL */}
       {selectedMeal && (
@@ -90,7 +177,6 @@ export default function Recipes() {
 
             <img src={selectedMeal.strMealThumb} width="200" />
 
-            {/* ALSO KEEP ADD BUTTON INSIDE MODAL */}
             <button
               onClick={() => handleAdd(selectedMeal)}
               style={{ display: "block", margin: "10px 0" }}
@@ -98,16 +184,18 @@ export default function Recipes() {
               Add to Calendar
             </button>
 
+            {/* INGREDIENTS */}
             <h3>Ingredients</h3>
             <ul>
-              {Array.from({ length: 10 }).map((_, i) => {
+              {Array.from({ length: 20 }).map((_, i) => {
                 const ingredient =
                   selectedMeal[`strIngredient${i + 1}`];
                 const measure =
                   selectedMeal[`strMeasure${i + 1}`];
 
                 return (
-                  ingredient && (
+                  ingredient &&
+                  ingredient.trim() && (
                     <li key={i}>
                       {ingredient} - {measure}
                     </li>
@@ -116,6 +204,7 @@ export default function Recipes() {
               })}
             </ul>
 
+            {/* INSTRUCTIONS */}
             <h3>Instructions</h3>
             <p>{selectedMeal.strInstructions}</p>
           </div>
