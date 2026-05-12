@@ -1,30 +1,42 @@
-import { useState } from "react";
+import { useContext } from "react";
+import { MealContext } from "../context/MealContext";
 
 export default function Calendar() {
-  const [meals, setMeals] = useState([]);
-  const [input, setInput] = useState("");
+  const { plannedMeals, setPlannedMeals } = useContext(MealContext);
 
-  const addMeal = () => {
-    setMeals([...meals, input]);
-    setInput("");
+  const removeMeal = (indexToRemove) => {
+    const updatedMeals = plannedMeals.filter(
+      (_, index) => index !== indexToRemove
+    );
+
+    setPlannedMeals(updatedMeals);
   };
 
   return (
     <div>
       <h1>Meal Calendar</h1>
 
-      <input
-        value={input}
-        onChange={(e) => setInput(e.target.value)}
-        placeholder="Enter meal"
-      />
-      <button onClick={addMeal}>Add</button>
+      {plannedMeals.length === 0 ? (
+        <p>No meals planned yet.</p>
+      ) : (
+        plannedMeals.map((meal, index) => (
+          <div
+            key={index}
+            style={{
+              border: "1px solid gray",
+              margin: "10px",
+              padding: "10px",
+            }}
+          >
+            <h3>{meal.name}</h3>
+            <p>Mood: {meal.mood}</p>
 
-      <ul>
-        {meals.map((meal, index) => (
-          <li key={index}>{meal}</li>
-        ))}
-      </ul>
+            <button onClick={() => removeMeal(index)}>
+              Remove
+            </button>
+          </div>
+        ))
+      )}
     </div>
   );
 }
