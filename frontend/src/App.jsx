@@ -1,22 +1,18 @@
-import { BrowserRouter, Routes, Route, Link } from "react-router-dom";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
 
+import Home from "./pages/Home";
+import Login from "./pages/Login";
 import Dashboard from "./pages/Dashboard";
 import Recipes from "./pages/Recipes";
-import Calendar from "./pages/Calendar";
 
 function App() {
   return (
     <BrowserRouter>
-      <nav>
-        <Link to="/">Home</Link> | 
-        <Link to="/recipes"> Recipes</Link> | 
-        <Link to="/calendar"> Calendar</Link>
-      </nav>
-
       <Routes>
-        <Route path="/" element={<Dashboard />} />
+        <Route path="/" element={<Home />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/recipes" element={<Recipes />} />
-        <Route path="/calendar" element={<Calendar />} />
       </Routes>
     </BrowserRouter>
   );

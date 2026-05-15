@@ -8,6 +8,9 @@ export const MealProvider = ({ children }) => {
     return saved ? JSON.parse(saved) : [];
   });
 
+  const [username, setUsername] = useState("");
+  const [selectedMood, setSelectedMood] = useState("");
+
   useEffect(() => {
     localStorage.setItem("plannedMeals", JSON.stringify(plannedMeals));
   }, [plannedMeals]);
@@ -17,11 +20,17 @@ export const MealProvider = ({ children }) => {
   };
 
   return (
-    <MealContext.Provider value={{
-      plannedMeals,
-      setPlannedMeals, // ✅ added for delete feature
-      addMeal
-    }}>
+    <MealContext.Provider
+      value={{
+        plannedMeals,
+        setPlannedMeals,
+        addMeal,
+        username,
+        setUsername,
+        selectedMood,
+        setSelectedMood,
+      }}
+    >
       {children}
     </MealContext.Provider>
   );
