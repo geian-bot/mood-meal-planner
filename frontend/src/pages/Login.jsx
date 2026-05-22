@@ -6,12 +6,50 @@ export default function Login() {
   const navigate = useNavigate();
 
   const [inputUsername, setInputUsername] = useState("");
+  const [inputPassword, setInputPassword] = useState("");
 
   const { setUsername } = useContext(MealContext);
 
-  const handleLogin = () => {
-    setUsername(inputUsername);
-    navigate("/dashboard"); // need to change this once backend is coded in
+  const handleLogin = async () => {
+    if (!inputUsername || !inputPassword) {
+      alert("Please fill in all fields");
+      return;
+    }
+
+    try {
+      const res = await fetch(
+        "http://localhost/MOOD-MEAL-PLANNER/backend/login.php",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+
+          // 🔥 REQUIRED for PHP sessions
+          credentials: "include",
+
+          body: JSON.stringify({
+            username: inputUsername,
+            password: inputPassword,
+          }),
+        }
+      );
+
+      console.log("HTTP STATUS:", res.status);
+
+      const data = await res.json();
+      console.log("RESPONSE:", data);
+
+      if (data.success) {
+        setUsername(inputUsername);
+        navigate("/dashboard");
+      } else {
+        alert(data.message || "Login failed");
+      }
+    } catch (error) {
+      console.log("FETCH ERROR:", error);
+      alert("Server error. Check XAMPP + backend URL.");
+    }
   };
 
   return (
@@ -48,6 +86,8 @@ export default function Login() {
         <input
           type="password"
           placeholder="Password"
+          value={inputPassword}
+          onChange={(e) => setInputPassword(e.target.value)}
           style={{
             width: "100%",
             padding: "10px",
@@ -68,6 +108,21 @@ export default function Login() {
         >
           Login
         </button>
+
+        {/* REGISTER LINK */}
+        <p style={{ marginTop: "15px", textAlign: "center" }}>
+          Don&apos;t have an account?{" "}
+          <span
+            style={{
+              color: "blue",
+              cursor: "pointer",
+              textDecoration: "underline",
+            }}
+            onClick={() => navigate("/register")}
+          >
+            Register now
+          </span>
+        </p>
       </div>
     </div>
   );
