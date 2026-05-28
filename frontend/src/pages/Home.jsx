@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Navbar from "../components/Navbar";
+import "./home.css";
 
 export default function Home() {
   const navigate = useNavigate();
@@ -28,54 +29,27 @@ export default function Home() {
     <div>
       <Navbar />
 
-      <div
-        style={{
-          display: "grid",
-          gridTemplateColumns: "repeat(4, 1fr)",
-          gap: "10px",
-          padding: "20px",
-        }}
-      >
-        {meals.map((meal) => (
-          <img
-            key={meal.idMeal}
-            src={meal.strMealThumb}
-            alt={meal.strMeal}
-            style={{
-              width: "100%",
-              height: "180px",
-              objectFit: "cover",
-              borderRadius: "10px",
-            }}
-          />
-        ))}
+      {/* HERO MEALS */}
+      <div className="scroll-wrapper">
+        <div className="scroll-track">
+          {meals.concat(meals).map((meal, index) => (
+            <img
+              key={index}
+              src={meal.strMealThumb}
+              alt=""
+              className="scroll-img"
+            />
+          ))}
+        </div>
       </div>
 
-      <div
-        style={{
-          textAlign: "center",
-          marginTop: "100px",
-        }}
-      >
-        <h1 style={{ fontSize: "3rem" }}>Meal Planner</h1>
+      {/* BRAND SECTION */}
+      <div className="hero">
+        <h1>MealBite</h1>
+        <p>MoodBite helps you discover and plan meals based on how you feel. Whether you're stressed, happy, tired, or craving comfort food, we match your mood with the perfect meal ideas to make eating easier, smarter, and more enjoyable.</p>
 
-        <p>
-          Plan your meals based on your mood and organize your nutrition.
-        </p>
-
-        <button
-          onClick={() => navigate("/login")}
-          style={{
-            padding: "12px 25px",
-            marginTop: "20px",
-            border: "none",
-            borderRadius: "6px",
-            cursor: "pointer",
-            backgroundColor: "black",
-            color: "white",
-          }}
-        >
-            Start Editing
+        <button onClick={() => navigate("/login")}>
+          Start Planning
         </button>
       </div>
     </div>

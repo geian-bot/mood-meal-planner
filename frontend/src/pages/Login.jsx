@@ -1,6 +1,7 @@
 import { useContext, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { MealContext } from "../context/MealContext";
+import "./login.css";
 
 export default function Login() {
   const navigate = useNavigate();
@@ -53,77 +54,47 @@ export default function Login() {
   };
 
   return (
-    <div
-      style={{
-        display: "flex",
-        justifyContent: "center",
-        alignItems: "center",
-        height: "100vh",
-      }}
-    >
-      <div
-        style={{
-          border: "1px solid #ccc",
-          padding: "30px",
-          borderRadius: "10px",
-          width: "300px",
-        }}
-      >
-        <h2>Login</h2>
+    <div className="login-page">
 
-        <input
-          type="text"
-          placeholder="Username"
-          value={inputUsername}
-          onChange={(e) => setInputUsername(e.target.value)}
-          style={{
-            width: "100%",
-            padding: "10px",
-            marginBottom: "15px",
-          }}
-        />
+      <div className="login-overlay">
 
-        <input
-          type="password"
-          placeholder="Password"
-          value={inputPassword}
-          onChange={(e) => setInputPassword(e.target.value)}
-          style={{
-            width: "100%",
-            padding: "10px",
-            marginBottom: "15px",
-          }}
-        />
+        <div className="login-card">
 
-        <button
-          onClick={handleLogin}
-          style={{
-            width: "100%",
-            padding: "10px",
-            border: "none",
-            cursor: "pointer",
-            backgroundColor: "black",
-            color: "white",
-          }}
-        >
-          Login
-        </button>
+          <div className="login-logo">🍽️ MoodBite</div>
 
-        {/* REGISTER LINK */}
-        <p style={{ marginTop: "15px", textAlign: "center" }}>
-          Don&apos;t have an account?{" "}
-          <span
-            style={{
-              color: "blue",
-              cursor: "pointer",
-              textDecoration: "underline",
-            }}
-            onClick={() => navigate("/register")}
-          >
-            Register now
-          </span>
-        </p>
+          <h2>Welcome Back</h2>
+
+          <input
+            type="text"
+            placeholder="Username"
+            value={inputUsername}
+            onChange={(e) => setInputUsername(e.target.value)}
+            className="login-input"
+          />
+
+          <input
+            type="password"
+            placeholder="Password"
+            value={inputPassword}
+            onChange={(e) => setInputPassword(e.target.value)}
+            className="login-input"
+          />
+
+          <button onClick={handleLogin} className="login-button">
+            Login
+          </button>
+
+          <p className="login-text">
+            Don&apos;t have an account?{" "}
+            <span onClick={() => navigate("/register")}>
+              Register now
+            </span>
+          </p>
+
+        </div>
+
       </div>
+
     </div>
   );
 }

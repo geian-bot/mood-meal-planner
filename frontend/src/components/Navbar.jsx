@@ -1,35 +1,35 @@
 import { Link } from "react-router-dom";
+import "./navbar.css";
 
 export default function Navbar({ username }) {
   return (
-    <nav
-      style={{
-        display: "flex",
-        justifyContent: "space-between",
-        alignItems: "center",
-        padding: "15px 25px",
-        borderBottom: "1px solid #ddd",
-        position: "sticky",
-        top: 0,
-        zIndex: 1000,
-      }}
-    >
-      <h2 style={{ margin: 0 }}>
-        {username ? `Welcome ${username}!` : "Meal Planner"}
-      </h2>
+    <nav className="navbar">
+      {/* LEFT - LOGO */}
+      <h2 className="logo">MealBite</h2>
 
-      <div>
-        <Link to="/" style={{ marginRight: "15px" }}>
-          Home
-        </Link>
+      {/* RIGHT - LINKS */}
+      <div className="nav-links">
+        <Link to="/">Home</Link>
+        <Link to="/about">About</Link>
 
-        <Link to="/recipes" style={{ marginRight: "15px" }}>
-          Recipes
-        </Link>
+        {/* Recipes Dropdown */}
+        <div className="dropdown">
+          <span>Recipes ▾</span>
+          <div className="dropdown-content">
+            <Link to="/recipes">View All</Link>
+            <Link to="/saved">Saved</Link>
+            <Link to="/created">Created</Link>
+          </div>
+        </div>
 
-        <Link to="/dashboard">
-          Dashboard
-        </Link>
+        {/* PROFILE */}
+        <div className="profile">
+          {username ? (
+            <span>👤 {username}</span>
+          ) : (
+            <Link to="/login">Login 👤</Link>
+          )}
+        </div>
       </div>
     </nav>
   );
