@@ -203,15 +203,15 @@ body {
 
 .feature-grid {
   display: grid;
-  grid-template-columns: repeat(3, 294px);
+  grid-template-columns: repeat(3, 294px) !important;
   justify-content: center;
-  gap: 120px;
+  gap: 120px !important;
 }
 
 .feature-card {
   width: 294px;
   height: 286px;
-  background: #A7D7A3;
+  background: #A7D7A3 !important;
   border-radius: 15px;
   color: black;
   padding: 25px;
@@ -250,7 +250,6 @@ body {
 
 .meal-card {
   position: relative;
-
   height: 400px;
 
   border-radius: 16px;

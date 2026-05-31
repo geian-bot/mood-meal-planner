@@ -2,6 +2,7 @@ import { useContext, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { MealContext } from "../context/MealContext";
 import "./login.css";
+import logo from "../assets/cook-orbit.png";
 
 export default function Login() {
   const navigate = useNavigate();
@@ -60,9 +61,13 @@ export default function Login() {
 
         <div className="login-card">
 
-          <div className="login-logo">🍽️ MoodBite</div>
-
+          
+          <img src={logo} alt="Cook Orbit" className="login-logo" />
+          <div className="login-logo">CookOrbit</div>
           <h2>Welcome Back</h2>
+          <p className="login-subtitle">
+            Continue planning meals that fit your mood.
+          </p>
 
           <input
             type="text"

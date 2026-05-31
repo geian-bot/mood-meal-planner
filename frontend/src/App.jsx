@@ -6,6 +6,7 @@ import Register from "./pages/Register";
 import Dashboard from "./pages/Dashboard";
 import Recipes from "./pages/Recipes";
 import RecipeDetails from "./pages/RecipeDetails";
+import About from "./pages/About";
 
 function App() {
   return (
@@ -23,6 +24,8 @@ function App() {
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/recipes" element={<Recipes />} />
         <Route path="/recipe/:id" element={<RecipeDetails />} />
+        <Route path="/about" element={<About />} />
+        
       </Routes>
     </BrowserRouter>
   );
