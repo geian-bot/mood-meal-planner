@@ -2,8 +2,13 @@ import { useEffect, useState, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import Navbar from "../components/Navbar";
 import { MealContext } from "../context/MealContext";
+import { useLocation } from "react-router-dom";
 
 export default function Recipes() {
+  const location = useLocation();
+
+  const queryParams = new URLSearchParams(location.search);
+  const searchQuery = queryParams.get("search") || "";
   const { selectedMood, username } = useContext(MealContext);
 
   const navigate = useNavigate();
@@ -180,6 +185,16 @@ export default function Recipes() {
             };
           })
         );
+
+        let filteredMeals = detailed;
+
+        if (searchQuery) {
+          filteredMeals = detailed.filter((meal) =>
+            meal.strMeal.toLowerCase().includes(searchQuery.toLowerCase())
+          );
+        }
+
+        setMeals(filteredMeals);
 
         setMeals(detailed);
       } catch (err) {

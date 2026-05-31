@@ -9,6 +9,66 @@ export default function Home() {
   const [meals, setMeals] = useState([]);
   const [quickMeals, setQuickMeals] = useState([]);
   const [currentIndex, setCurrentIndex] = useState(0);
+  const [mood, setMood] = useState("");
+
+  const [search, setSearch] = useState("");
+
+  useEffect(() => {
+    if (!mood) return;
+
+    const fetchMoodMeals = async () => {
+      const options = moodMap[mood];
+
+      const randomKeyword =
+        options[Math.floor(Math.random() * options.length)];
+
+      const res = await fetch(
+        `https://www.themealdb.com/api/json/v1/1/search.php?s=${randomKeyword}`
+      );
+
+      const data = await res.json();
+
+      setQuickMeals(data.meals || []);
+      setCurrentIndex(0);
+    };
+
+    fetchMoodMeals();
+  }, [mood]);
+
+  const handleSearch = () => {
+    if (!search.trim()) return;
+    navigate(`/recipes?search=${search}`);
+    setSearch("");
+  };
+
+  const handleKeyDown = (e) => {
+    if (e.key === "Enter") {
+      handleSearch();
+    }
+  };
+
+  const fetchMoodMeals = async (selectedMood) => {
+    if (!selectedMood) return;
+
+    const keyword = moodMap[selectedMood];
+
+    const res = await fetch(
+      `https://www.themealdb.com/api/json/v1/1/search.php?s=${keyword}`
+    );
+
+    const data = await res.json();
+
+    if (data.meals) {
+      setQuickMeals(
+        data.meals.map((meal) => ({
+          ...meal,
+          cookTime: Math.floor(Math.random() * 25) + 10,
+        }))
+      );
+
+      setCurrentIndex(0);
+    }
+  };
 
   useEffect(() => {
     const fetchMeals = async () => {
@@ -62,6 +122,19 @@ export default function Home() {
     }
   };
 
+  const moodMap = {
+    "stressed/anxious": ["chicken soup", "rice", "salmon", "oatmeal"],
+    sad: ["chocolate", "pasta", "ice cream", "cake"],
+    "tired/lazy": ["toast", "sandwich", "noodles", "eggs"],
+    "happy/energetic": ["salad", "grilled chicken", "fruit", "smoothie"],
+    hangry: ["beef", "burger", "fried chicken", "pizza"],
+    bored: ["pasta", "tacos", "wrap", "dessert"],
+  };
+
+  const handleTagClick = (tag) => {
+    navigate(`/recipes?search=${tag}`);
+  };
+
   return (
     <div className="home">
 
@@ -98,15 +171,37 @@ export default function Home() {
             <input
               type="text"
               placeholder="Search meals for your mood..."
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              onKeyDown={handleKeyDown}
             />
+
+            <select
+              value={mood}
+              onChange={(e) => {
+                const selected = e.target.value;
+                setMood(selected);
+                fetchMoodMeals(selected);
+              }}
+
+            >
+              <option value="">Mood</option>
+              <option value="stressed/anxious">Stressed / Anxious</option>
+              <option value="sad">Sad</option>
+              <option value="tired/lazy">Tired / Lazy</option>
+              <option value="happy/energetic">Happy / Energetic</option>
+              <option value="hangry">Hangry</option>
+              <option value="bored">Bored</option>
+            </select>
+
           </div>
 
           <div className="popular-tags">
-            <span>Chicken</span>
-            <span>Pasta</span>
-            <span>Dessert</span>
-            <span>Healthy</span>
-            <span>Comfort Food</span>
+            <span onClick={() => handleTagClick("chicken")}>Chicken</span>
+            <span onClick={() => handleTagClick("pasta")}>Pasta</span>
+            <span onClick={() => handleTagClick("dessert")}>Dessert</span>
+            <span onClick={() => handleTagClick("healthy")}>Healthy</span>
+            <span onClick={() => handleTagClick("comfort food")}>Comfort Food</span>
           </div>
 
         </div>

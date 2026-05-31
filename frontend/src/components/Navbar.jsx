@@ -1,8 +1,24 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { useState } from "react";
 import "./navbar.css";
 import logo from "../assets/cook-orbit.png";
 
 export default function Navbar({ username }) {
+  const navigate = useNavigate();
+  const [search, setSearch] = useState("");
+
+  const handleSearch = () => {
+    if (!search.trim()) return;
+    navigate(`/recipes?search=${search}`);
+    setSearch("");
+  };
+
+  const handleKeyDown = (e) => {
+    if (e.key === "Enter") {
+      handleSearch();
+    }
+  };
+  
   return (
     <nav className="navbar">
 
@@ -14,7 +30,13 @@ export default function Navbar({ username }) {
       </div>
 
         <div className="nav-center">
-          <input type="text" placeholder="Search recipes..." />
+           <input
+              type="text"
+              placeholder="Search recipes..."
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              onKeyDown={handleKeyDown}
+            />
         </div>
 
         <div className="nav-right">
