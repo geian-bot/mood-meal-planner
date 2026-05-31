@@ -2,7 +2,9 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-
+  position: sticky;
+  top: 0;
+  z-index: 1000;
   padding: 12px 30px;
 
   background: white;
@@ -32,6 +34,7 @@
   border-radius: 999px;
   border: 1px solid #004000;
   background: #f9f9f9;
+  color: black;
 }
 
 .nav-right {
