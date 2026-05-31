@@ -1,35 +1,50 @@
 import { Link } from "react-router-dom";
 import "./navbar.css";
+import logo from "../assets/cook-orbit.png";
 
 export default function Navbar({ username }) {
   return (
     <nav className="navbar">
-      {/* LEFT - LOGO */}
-      <h2 className="logo">MealBite</h2>
 
       {/* RIGHT - LINKS */}
       <div className="nav-links">
-        <Link to="/">Home</Link>
-        <Link to="/about">About</Link>
+        <div className="nav-left">
+          <img src={logo} alt="Cook Orbit" className="logo" />
+          <h2>Cook Orbit</h2>
+      </div>
 
-        {/* Recipes Dropdown */}
-        <div className="dropdown">
-          <span>Recipes ▾</span>
-          <div className="dropdown-content">
-            <Link to="/recipes">View All</Link>
-            <Link to="/saved">Saved</Link>
-            <Link to="/created">Created</Link>
-          </div>
+        <div className="nav-center">
+          <input type="text" placeholder="Search recipes..." />
         </div>
 
-        {/* PROFILE */}
-        <div className="profile">
+        <div className="nav-right">
+          <Link to="/home">Home</Link>
+
+          <div className="dropdown">
+            <span>Recipes ▾</span>
+            <div className="dropdown-content">
+              <Link to="/recipes">View All</Link>
+              <Link to="/saved">Saved</Link>
+              <Link to="/created">Created</Link>
+            </div>
+          </div>
+
+          <Link to="/about">About Us</Link>
+
+          <div className="profile">
           {username ? (
             <span>👤 {username}</span>
           ) : (
             <Link to="/login">Login 👤</Link>
           )}
         </div>
+        </div>
+
+        {/* Recipes Dropdown */}
+        
+
+        {/* PROFILE */}
+        
       </div>
     </nav>
   );
