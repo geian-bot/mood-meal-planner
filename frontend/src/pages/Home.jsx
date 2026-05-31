@@ -10,34 +10,23 @@ export default function Home() {
   const [quickMeals, setQuickMeals] = useState([]);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [mood, setMood] = useState("");
-
   const [search, setSearch] = useState("");
 
-  useEffect(() => {
-    if (!mood) return;
-
-    const fetchMoodMeals = async () => {
-      const options = moodMap[mood];
-
-      const randomKeyword =
-        options[Math.floor(Math.random() * options.length)];
-
-      const res = await fetch(
-        `https://www.themealdb.com/api/json/v1/1/search.php?s=${randomKeyword}`
-      );
-
-      const data = await res.json();
-
-      setQuickMeals(data.meals || []);
-      setCurrentIndex(0);
-    };
-
-    fetchMoodMeals();
-  }, [mood]);
+  const moodMap = {
+    "stressed/anxious": ["chicken soup", "rice", "salmon", "oatmeal"],
+    sad: ["chocolate", "pasta", "ice cream", "cake"],
+    "tired/lazy": ["toast", "sandwich", "noodles", "eggs"],
+    "happy/energetic": ["salad", "grilled chicken", "fruit", "smoothie"],
+    hangry: ["beef", "burger", "fried chicken", "pizza"],
+    bored: ["pasta", "tacos", "wrap", "dessert"],
+  };
 
   const handleSearch = () => {
     if (!search.trim()) return;
-    navigate(`/recipes?search=${search}`);
+    const query = mood
+      ? `/recipes?search=${search}&mood=${mood}`
+      : `/recipes?search=${search}`;
+    navigate(query);
     setSearch("");
   };
 
@@ -47,42 +36,16 @@ export default function Home() {
     }
   };
 
-  const fetchMoodMeals = async (selectedMood) => {
-    if (!selectedMood) return;
-
-    const keyword = moodMap[selectedMood];
-
-    const res = await fetch(
-      `https://www.themealdb.com/api/json/v1/1/search.php?s=${keyword}`
-    );
-
-    const data = await res.json();
-
-    if (data.meals) {
-      setQuickMeals(
-        data.meals.map((meal) => ({
-          ...meal,
-          cookTime: Math.floor(Math.random() * 25) + 10,
-        }))
-      );
-
-      setCurrentIndex(0);
-    }
-  };
-
   useEffect(() => {
     const fetchMeals = async () => {
-      const res = await fetch(
-        "https://www.themealdb.com/api/json/v1/1/search.php?s="
-      );
-
-      const data = await res.json();
-
-      const randomMeals = data.meals
-        .sort(() => Math.random() - 0.5)
-        .slice(0, 6);
-
-      setMeals(randomMeals);
+      try {
+        const res = await fetch(`https://www.themealdb.com/api/json/v1/1/search.php?s=`);
+        const data = await res.json();
+        const randomMeals = data.meals.sort(() => Math.random() - 0.5).slice(0, 6);
+        setMeals(randomMeals);
+      } catch (err) {
+        // API unavailable, show nothing
+      }
     };
 
     fetchMeals();
@@ -90,21 +53,20 @@ export default function Home() {
 
   useEffect(() => {
     const fetchQuickMeals = async () => {
-      const res = await fetch(
-        "https://www.themealdb.com/api/json/v1/1/filter.php?c=Breakfast"
-      );
-
-      const data = await res.json();
-
-      const mealsWithTime = data.meals
-        .slice(0, 12)
-        .map((meal) => ({
-          ...meal,
-          cookTime: Math.floor(Math.random() * 25) + 10,
-        }))
-        .sort((a, b) => a.cookTime - b.cookTime);
-
-      setQuickMeals(mealsWithTime);
+      try {
+        const res = await fetch(`https://www.themealdb.com/api/json/v1/1/filter.php?c=Breakfast`);
+        const data = await res.json();
+        const mealsWithTime = data.meals
+          .slice(0, 12)
+          .map((meal) => ({
+            ...meal,
+            cookTime: Math.floor(Math.random() * 25) + 10,
+          }))
+          .sort((a, b) => a.cookTime - b.cookTime);
+        setQuickMeals(mealsWithTime);
+      } catch (err) {
+        // API unavailable, show nothing
+      }
     };
 
     fetchQuickMeals();
@@ -120,15 +82,6 @@ export default function Home() {
     if (currentIndex - 4 >= 0) {
       setCurrentIndex(currentIndex - 4);
     }
-  };
-
-  const moodMap = {
-    "stressed/anxious": ["chicken soup", "rice", "salmon", "oatmeal"],
-    sad: ["chocolate", "pasta", "ice cream", "cake"],
-    "tired/lazy": ["toast", "sandwich", "noodles", "eggs"],
-    "happy/energetic": ["salad", "grilled chicken", "fruit", "smoothie"],
-    hangry: ["beef", "burger", "fried chicken", "pizza"],
-    bored: ["pasta", "tacos", "wrap", "dessert"],
   };
 
   const handleTagClick = (tag) => {
@@ -181,9 +134,10 @@ export default function Home() {
               onChange={(e) => {
                 const selected = e.target.value;
                 setMood(selected);
-                fetchMoodMeals(selected);
+                if (selected) {
+                  navigate(`/recipes?mood=${selected}`);
+                }
               }}
-
             >
               <option value="">Mood</option>
               <option value="stressed/anxious">Stressed / Anxious</option>
@@ -212,11 +166,7 @@ export default function Home() {
 
         <div className="about-content">
 
-          <img
-            src={logo}
-            alt="Cook Orbit"
-            className="about-logo"
-          />
+          <img src={logo} alt="Cook Orbit" className="about-logo" />
 
           <div className="about-text">
 
@@ -230,10 +180,7 @@ export default function Home() {
               and lifestyle.
             </p>
 
-            <button
-              className="start-btn"
-              onClick={() => navigate("/login")}
-            >
+            <button className="start-btn" onClick={() => navigate("/login")}>
               Start Planning!
             </button>
 
@@ -252,51 +199,32 @@ export default function Home() {
 
           <div className="feature-card">
             <h3>📅 Smart Meal Calendar</h3>
-            <p>
-              Plan your meals daily, weekly, or monthly using an interactive
-              calendar. Easily add, edit, or organize meals for better food
-              planning.
-            </p>
+            <p>Plan your meals daily, weekly, or monthly using an interactive calendar. Easily add, edit, or organize meals for better food planning.</p>
           </div>
 
           <div className="feature-card">
             <h3>😊 Mood-Based Suggestions</h3>
-            <p>
-              Get meal recommendations based on your current mood—whether
-              you're happy, stressed, tired, or energetic.
-            </p>
+            <p>Get meal recommendations based on your current mood—whether you're happy, stressed, tired, or energetic.</p>
           </div>
 
           <div className="feature-card">
             <h3>🍽️ Recipe Explorer</h3>
-            <p>
-              Search and browse recipes from an integrated API or add your
-              own custom meals with full instructions and ingredients.
-            </p>
+            <p>Search and browse recipes from an integrated API or add your own custom meals with full instructions and ingredients.</p>
           </div>
 
           <div className="feature-card">
             <h3>🔥 Nutrition Tracking</h3>
-            <p>
-              Automatically calculate calories, protein, carbohydrates,
-              and fats for every meal.
-            </p>
+            <p>Automatically calculate calories, protein, carbohydrates, and fats for every meal.</p>
           </div>
 
           <div className="feature-card">
             <h3>🔎 Smart Search & Filters</h3>
-            <p>
-              Quickly find meals based on type, mood, calories,
-              or dietary preferences.
-            </p>
+            <p>Quickly find meals based on type, mood, calories, or dietary preferences.</p>
           </div>
 
           <div className="feature-card">
             <h3>👤 Personal Meal Profile</h3>
-            <p>
-              Save your favorite recipes, track meal history,
-              and manage your personalized experience.
-            </p>
+            <p>Save your favorite recipes, track meal history, and manage your personalized experience.</p>
           </div>
 
         </div>
@@ -311,9 +239,7 @@ export default function Home() {
         <div className="meal-carousel">
 
           <button
-            className={`carousel-btn ${
-              currentIndex === 0 ? "disabled-btn" : ""
-            }`}
+            className={`carousel-btn ${currentIndex === 0 ? "disabled-btn" : ""}`}
             onClick={prevMeals}
             disabled={currentIndex === 0}
           >
@@ -321,43 +247,23 @@ export default function Home() {
           </button>
 
           <div className="meal-cards">
-
-            {quickMeals
-              .slice(currentIndex, currentIndex + 4)
-              .map((meal) => (
-
-                <div
-                  key={meal.idMeal}
-                  className="meal-card"
-                  onClick={() => navigate(`/recipe/${meal.idMeal}`)}
-                  
-                >
-
-                  <img
-                    src={meal.strMealThumb}
-                    alt={meal.strMeal}
-                  />
-
-                  <div className="meal-overlay">
-
-                    <h3>{meal.strMeal}</h3>
-
-                    <p>⏱ {meal.cookTime} mins</p>
-
-                  </div>
-
+            {quickMeals.slice(currentIndex, currentIndex + 4).map((meal) => (
+              <div
+                key={meal.idMeal}
+                className="meal-card"
+                onClick={() => navigate(`/recipe/${meal.idMeal}`)}
+              >
+                <img src={meal.strMealThumb} alt={meal.strMeal} />
+                <div className="meal-overlay">
+                  <h3>{meal.strMeal}</h3>
+                  <p>⏱ {meal.cookTime} mins</p>
                 </div>
-
-              ))}
-
+              </div>
+            ))}
           </div>
 
           <button
-            className={`carousel-btn ${
-              currentIndex + 4 >= quickMeals.length
-                ? "disabled-btn"
-                : ""
-            }`}
+            className={`carousel-btn ${currentIndex + 4 >= quickMeals.length ? "disabled-btn" : ""}`}
             onClick={nextMeals}
             disabled={currentIndex + 4 >= quickMeals.length}
           >
