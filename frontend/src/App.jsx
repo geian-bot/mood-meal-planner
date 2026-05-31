@@ -11,16 +11,17 @@ function App() {
   return (
     <BrowserRouter>
       <Routes>
+        {/* Home */}
+        <Route path="/" element={<Home />} />
         <Route path="/home" element={<Home />} />
 
+        {/* Authentication */}
         <Route path="/login" element={<Login />} />
-
         <Route path="/register" element={<Register />} />
 
+        {/* Main Pages */}
         <Route path="/dashboard" element={<Dashboard />} />
-
         <Route path="/recipes" element={<Recipes />} />
-
         <Route path="/recipe/:id" element={<RecipeDetails />} />
       </Routes>
     </BrowserRouter>
