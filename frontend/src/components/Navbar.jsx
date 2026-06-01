@@ -51,6 +51,8 @@ export default function Navbar({ username }) {
             </div>
           </div>
 
+          <Link to="/calendar">Calendar</Link>
+
           <Link to="/about">About Us</Link>
 
           <div className="profile">

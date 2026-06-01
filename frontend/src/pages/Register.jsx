@@ -1,5 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import "./login.css";
+import logo from "../assets/cook-orbit.png";
 
 export default function Register() {
   const navigate = useNavigate();
@@ -43,61 +45,49 @@ export default function Register() {
   };
 
   return (
-    <div
-      style={{
-        display: "flex",
-        justifyContent: "center",
-        alignItems: "center",
-        height: "100vh",
-      }}
-    >
-      <div
-        style={{
-          border: "1px solid #ccc",
-          padding: "30px",
-          borderRadius: "10px",
-          width: "300px",
-        }}
-      >
-        <h2>Register</h2>
+    <div className="login-page">
+      <div className="login-overlay">
+        <div className="login-card">
 
-        <input
-          type="text"
-          placeholder="Username"
-          value={username}
-          onChange={(e) => setUsername(e.target.value)}
-          style={{
-            width: "100%",
-            padding: "10px",
-            marginBottom: "15px",
-          }}
-        />
+          <img src={logo} alt="Cook Orbit" className="login-logo" />
 
-        <input
-          type="password"
-          placeholder="Password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          style={{
-            width: "100%",
-            padding: "10px",
-            marginBottom: "15px",
-          }}
-        />
+          <h2>Create Account</h2>
 
-        <button
-          onClick={handleRegister}
-          style={{
-            width: "100%",
-            padding: "10px",
-            backgroundColor: "black",
-            color: "white",
-            border: "none",
-            cursor: "pointer",
-          }}
-        >
-          Register
-        </button>
+          <p className="login-subtitle">
+            Start planning meals that fit your mood and lifestyle.
+          </p>
+
+          <input
+            type="text"
+            placeholder="Username"
+            value={username}
+            onChange={(e) => setUsername(e.target.value)}
+            className="login-input"
+          />
+
+          <input
+            type="password"
+            placeholder="Password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            className="login-input"
+          />
+
+          <button
+            onClick={handleRegister}
+            className="login-button"
+          >
+            Register
+          </button>
+
+          <p className="login-text">
+            Already have an account?{" "}
+            <span onClick={() => navigate("/login")}>
+              Login here
+            </span>
+          </p>
+
+        </div>
       </div>
     </div>
   );

@@ -7,6 +7,7 @@ import Dashboard from "./pages/Dashboard";
 import Recipes from "./pages/Recipes";
 import RecipeDetails from "./pages/RecipeDetails";
 import About from "./pages/About";
+import Calendar from "./pages/Calendar.jsx";
 
 function App() {
   return (
@@ -24,8 +25,8 @@ function App() {
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/recipes" element={<Recipes />} />
         <Route path="/recipe/:id" element={<RecipeDetails />} />
+        <Route path="/calendar" element={<Calendar />} />
         <Route path="/about" element={<About />} />
-        
       </Routes>
     </BrowserRouter>
   );

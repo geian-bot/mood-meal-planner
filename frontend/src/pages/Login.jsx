@@ -63,7 +63,10 @@ export default function Login() {
 
           
           <img src={logo} alt="Cook Orbit" className="login-logo" />
-          <div className="login-logo">CookOrbit</div>
+
+          <h3 className="login-brand">
+            Cook Orbit
+          </h3>
           <h2>Welcome Back</h2>
           <p className="login-subtitle">
             Continue planning meals that fit your mood.
