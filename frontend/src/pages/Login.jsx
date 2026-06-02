@@ -27,7 +27,7 @@ export default function Login() {
             "Content-Type": "application/json",
           },
 
-          // 🔥 REQUIRED for PHP sessions
+          // REQUIRED for PHP sessions
           credentials: "include",
 
           body: JSON.stringify({
@@ -44,7 +44,8 @@ export default function Login() {
 
       if (data.success) {
         setUsername(inputUsername);
-        navigate("/dashboard");
+        localStorage.setItem("username", inputUsername);
+        navigate("/calendar");
       } else {
         alert(data.message || "Login failed");
       }
@@ -90,6 +91,17 @@ export default function Login() {
 
           <button onClick={handleLogin} className="login-button">
             Login
+          </button>
+
+          <button
+            className="login-button guest-btn"
+            onClick={() => {
+              localStorage.setItem("username", "Guest");
+              setUsername("Guest");
+              navigate("/calendar");
+            }}
+          >
+            Continue as Guest
           </button>
 
           <p className="login-text">
