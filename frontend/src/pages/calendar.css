@@ -7,7 +7,7 @@
   --green-pale: #e8f5e4;
   --cream: #f8fbf7;
   --white: #ffffff;
-  --border: #d4e8d0;
+  --border:     #d4e8d0;
   --text-dark: #1a1a1a;
   --text-mid: #444;
   --text-light: #777;
@@ -23,7 +23,6 @@
   font-family: 'Instrument Sans', sans-serif;
   background: var(--cream);
   min-height: 100vh;
-  padding-top: var(--navbar-h);
 }
 
 /* ── LAYOUT ── */

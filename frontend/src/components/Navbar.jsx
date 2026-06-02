@@ -47,7 +47,7 @@ export default function Navbar({ username }) {
             <div className="dropdown-content">
               <Link to="/recipes">View All</Link>
               <Link to="/saved">Saved</Link>
-              <Link to="/created">Created</Link>
+              <Link to="/createrecipe">Created</Link>
             </div>
           </div>
 

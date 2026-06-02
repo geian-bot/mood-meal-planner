@@ -8,6 +8,7 @@ import Recipes from "./pages/Recipes";
 import RecipeDetails from "./pages/RecipeDetails";
 import About from "./pages/About";
 import Calendar from "./pages/Calendar.jsx";
+import CreateRecipe from "./pages/CreateRecipe";
 
 function App() {
   return (
@@ -23,6 +24,7 @@ function App() {
 
         {/* Main Pages */}
         <Route path="/dashboard" element={<Dashboard />} />
+        <Route path="/createrecipe" element={<CreateRecipe />} />
         <Route path="/recipes" element={<Recipes />} />
         <Route path="/recipe/:id" element={<RecipeDetails />} />
         <Route path="/calendar" element={<Calendar />} />
