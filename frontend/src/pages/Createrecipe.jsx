@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import Navbar from "../components/Navbar";
 import { MealContext } from "../context/MealContext";
 import "./createrecipe.css";
+import { API } from "../utils/api";
 
 const CATEGORIES = ["Breakfast", "Lunch", "Dinner", "Snack", "Dessert", "Side", "Starter"];
 const MOODS = [
@@ -17,7 +18,7 @@ const EMPTY_INGREDIENT = { name: "", quantity: "" };
 
 export default function CreateRecipe() {
   const navigate = useNavigate();
-  const { username, addUserRecipe } = useContext(MealContext);
+  const { username } = useContext(MealContext);
   const fileInputRef = useRef(null);
 
   const [form, setForm] = useState({
@@ -82,48 +83,39 @@ export default function CreateRecipe() {
     setSaving(true);
 
     const cleanIngredients = ingredients.filter((i) => i.name.trim());
-    const newRecipe = {
-      idMeal: `user_${Date.now()}`,
-      isUserCreated: true,
-      strMeal: form.name.trim(),
-      strMealThumb: imagePreview || "https://placehold.co/400x300/e8f5e4/004000?text=My+Recipe",
-      strCategory: form.category,
-      strMood: form.mood,
-      strInstructions: form.instructions.trim(),
-      strDescription: form.description.trim(),
-      estimatedCookTime: parseInt(form.prepTime) || 30,
-      servings: parseInt(form.servings) || 2,
-      estimatedCalories: cleanIngredients.length * 80,
-      protein: cleanIngredients.length * 5,
-      carbs: cleanIngredients.length * 7,
-      fat: cleanIngredients.length * 3,
-      ingredients: cleanIngredients.map((i, idx) => ({
-        strIngredient: i.name.trim(),
-        strMeasure: i.quantity.trim(),
-        order: idx + 1,
-      })),
-      tags: [
-        parseInt(form.prepTime) <= 20 ? "Fast" : null,
-        parseInt(form.prepTime) <= 20 ? "Easy" : null,
-      ].filter(Boolean),
-      vegetarianScore: 60,
-      vitamins: [],
-      createdAt: new Date().toISOString(),
-      createdBy: username || "anonymous",
-    };
 
-    await new Promise((r) => setTimeout(r, 800));
+    try {
+      const res = await fetch(API.saveRecipe, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        credentials: "include",
+        body: JSON.stringify({
+          name:         form.name.trim(),
+          description:  form.description.trim(),
+          category:     form.category,
+          mood:         form.mood,
+          prep_time:    parseInt(form.prepTime) || 30,
+          servings:     parseInt(form.servings) || 2,
+          instructions: form.instructions.trim(),
+          ingredients:  cleanIngredients,
+          image:        imagePreview || null,
+        }),
+      });
 
-    if (typeof addUserRecipe === "function") {
-      addUserRecipe(newRecipe);
-    } else {
-      const existing = JSON.parse(localStorage.getItem("userRecipes") || "[]");
-      localStorage.setItem("userRecipes", JSON.stringify([newRecipe, ...existing]));
+      const data = await res.json();
+
+      if (data.success) {
+        setSuccess(true);
+        setTimeout(() => navigate("/saved"), 1800);
+      } else {
+        alert(data.message || "Failed to save recipe. Are you logged in?");
+      }
+    } catch (err) {
+      console.error(err);
+      alert("Server error. Please try again.");
+    } finally {
+      setSaving(false);
     }
-
-    setSaving(false);
-    setSuccess(true);
-    setTimeout(() => navigate("/recipes"), 1800);
   };
 
   return (
