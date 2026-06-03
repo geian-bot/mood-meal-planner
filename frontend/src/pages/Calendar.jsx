@@ -55,20 +55,18 @@ export default function CalendarPage() {
   const navigate = useNavigate();
   const { username, setUsername } = useContext(MealContext);
 
-  // SESSION / GUEST MODE GUARD 
   useEffect(() => {
     const savedUser = localStorage.getItem("username");
 
-    // if no session AND no guest fallback → set guest mode
-    if (!savedUser && !username) {
-      setUsername("Guest");
+    // no user at all → force login
+    if (!savedUser) {
+      navigate("/login");
+      return;
     }
 
-    // if session exists but context is empty → restore it
-    if (savedUser && !username) {
-      setUsername(savedUser);
-    }
-  }, []);
+    // restore session user
+    setUsername(savedUser);
+  }, [navigate, setUsername]);
 
   const [view, setView] = useState("Monthly");
   const [currentDate, setCurrentDate] = useState(new Date());

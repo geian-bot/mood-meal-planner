@@ -180,7 +180,18 @@ export default function Home() {
               and lifestyle.
             </p>
 
-            <button className="start-btn" onClick={() => navigate("/login")}>
+            <button
+              className="start-btn"
+              onClick={() => {
+                const savedUser = localStorage.getItem("username");
+
+                if (savedUser) {
+                  navigate("/calendar");
+                } else {
+                  navigate("/login");
+                }
+              }}
+            >
               Start Planning!
             </button>
 
