@@ -1,13 +1,13 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 
-import Home from "./pages/Home";
-import Login from "./pages/Login";
-import Register from "./pages/Register";
-import Recipes from "./pages/Recipes";
-import RecipeDetails from "./pages/RecipeDetails";
-import About from "./pages/About";
+import Home from "./pages/Home.jsx";
+import Login from "./pages/Login.jsx";
+import Register from "./pages/Register.jsx";
+import Recipes from "./pages/Recipes.jsx";
+import RecipeDetails from "./pages/RecipeDetails.jsx";
+import About from "./pages/About.jsx";
 import Calendar from "./pages/Calendar.jsx";
-import CreateRecipe from "./pages/CreateRecipe";
+import CreateRecipe from "./pages/Createrecipe.jsx";
 
 function App() {
   return (

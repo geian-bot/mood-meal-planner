@@ -2,7 +2,7 @@ import { useState, useContext, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import Navbar from "../components/Navbar";
 import { MealContext } from "../context/MealContext";
-import "./CreateRecipe.css";
+import "./createrecipe.css";
 
 const CATEGORIES = ["Breakfast", "Lunch", "Dinner", "Snack", "Dessert", "Side", "Starter"];
 const MOODS = [
