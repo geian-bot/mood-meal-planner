@@ -1,7 +1,7 @@
 <?php
 $allowed_origins = [
     "http://localhost:5173",
-    "https://mood-meal-planner-production.up.railway.app" // ← fill this in later
+    "https://https://mood-meal-planner.vercel.app/" // ← fill this in later
 ];
 
 $origin = $_SERVER['HTTP_ORIGIN'] ?? '';
