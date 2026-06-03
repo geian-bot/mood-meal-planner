@@ -4,7 +4,7 @@ import { MealContext } from "../context/MealContext";
 import "./navbar.css";
 import logo from "../assets/cook-orbit.png";
 
-export default function Navbar({ username }) {
+export default function Navbar() {
   const navigate = useNavigate();
   const [search, setSearch] = useState("");
 
