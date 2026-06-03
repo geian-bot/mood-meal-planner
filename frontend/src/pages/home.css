@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=DM+Sans:wght@300;400;500&display=swap');
+
 body {
   font-family: "Instrument Sans", sans-serif;
   margin: 0;
@@ -31,7 +33,7 @@ body {
 .hero {
   position: absolute;
   inset: 0;
-  margin-top: 60px;
+  margin-top: 40px;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -44,7 +46,8 @@ body {
 }
 
 .hero h1 {
-  font-family: "Lucida Console", monospace;
+  font-family: "Playfair Display", serif;
+  font-style: italic;
   font-size: 3rem;
   margin: 0;
   color: white;
@@ -65,7 +68,7 @@ body {
   width: 100%;
   max-width: 500px;
 
-  margin-top: 15px;
+  margin-top: 25px;
 
   background: white;
   border-radius: 999px;
@@ -93,11 +96,11 @@ body {
   flex-wrap: wrap;
   justify-content: center;
 
-  margin-top: 12px;
+  margin-top: 20px;
 }
 
 .popular-tags span {
-  background: rgba(255,255,255,0.2);
+  background: #3d8b3dc9;
   padding: 6px 12px;
   border-radius: 999px;
   cursor: pointer;

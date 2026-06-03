@@ -1,0 +1,458 @@
+/* ─────────────────────────────────────────
+   RecipeDetails.css
+   Mood-Based Meal Planner — Recipe Detail Page
+   Palette matches :root CSS variables in global styles
+───────────────────────────────────────── */
+
+/* ── Page Shell ── */
+.rd-page {
+  min-height: 100vh;
+  background-color: var(--cream);
+  color: var(--text-dark);
+  font-family: "Georgia", "Times New Roman", serif;
+}
+
+.navbar {
+  font-family: "Instrument Sans", sans-serif;
+}
+
+/* ── Loading ── */
+.rd-loading-screen {
+  min-height: 100vh;
+  background: var(--cream);
+}
+.rd-loading-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  padding: 80px 20px;
+  color: var(--green-mid);
+  font-size: 1rem;
+}
+.rd-spinner {
+  width: 40px;
+  height: 40px;
+  border: 3px solid var(--green-light);
+  border-top-color: var(--green-mid);
+  border-radius: 50%;
+  animation: rd-spin 0.9s linear infinite;
+}
+@keyframes rd-spin {
+  to { transform: rotate(360deg); }
+}
+
+/* ── Not Found ── */
+.rd-not-found {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+  padding: 80px 20px;
+  text-align: center;
+}
+
+/* ── Back Button ── */
+.rd-back-wrapper {
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 24px 24px 0;
+}
+
+.rd-back-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: transparent;
+  border: 2px solid var(--green-soft);
+  color: var(--green-mid);
+  font-size: 0.9rem;
+  font-family: inherit;
+  font-weight: 600;
+  letter-spacing: 0.03em;
+  padding: 9px 18px;
+  border-radius: 50px;
+  cursor: pointer;
+  transition: background 0.2s ease, color 0.2s ease, border-color 0.2s ease,
+    transform 0.15s ease, box-shadow 0.2s ease;
+}
+.rd-back-btn:hover {
+  background: var(--green-mid);
+  border-color: var(--green-mid);
+  color: var(--warm-white);
+  transform: translateX(-3px);
+  box-shadow: 0 4px 14px rgba(26, 92, 26, 0.25);
+}
+.rd-back-icon {
+  width: 18px;
+  height: 18px;
+  flex-shrink: 0;
+  transition: transform 0.15s ease;
+}
+.rd-back-btn:hover .rd-back-icon {
+  transform: translateX(-2px);
+}
+
+/* ── Hero Image ── */
+.rd-hero {
+  max-width: 960px;
+  margin: 20px auto 0;
+  padding: 0 24px;
+}
+.rd-hero-image-wrap {
+  position: relative;
+  border-radius: 20px;
+  overflow: hidden;
+  box-shadow: 0 8px 40px rgba(10, 46, 10, 0.18);
+  aspect-ratio: 16 / 7;
+}
+.rd-hero-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  transition: transform 0.6s ease;
+}
+.rd-hero-image-wrap:hover .rd-hero-image {
+  transform: scale(1.03);
+}
+.rd-hero-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    to bottom,
+    transparent 55%,
+    rgba(10, 46, 10, 0.4) 100%
+  );
+  pointer-events: none;
+}
+.rd-category-badge {
+  position: absolute;
+  top: 18px;
+  right: 18px;
+  background: var(--accent);
+  color: var(--green-deep);
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: 6px 14px;
+  border-radius: 50px;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.15);
+}
+
+/* ── Container ── */
+.rd-container {
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 0 24px 60px;
+}
+
+/* ── Title Row ── */
+.rd-title-row {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 20px;
+  margin: 32px 0 40px;
+  flex-wrap: wrap;
+}
+.rd-title-left {
+  flex: 1;
+  min-width: 0;
+}
+.rd-origin-tag {
+  display: inline-block;
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--green-soft);
+  margin-bottom: 8px;
+}
+.rd-title {
+  font-size: clamp(1.8rem, 4vw, 2.8rem);
+  font-weight: 700;
+  color: var(--green-deep);
+  line-height: 1.15;
+  margin: 0;
+  word-break: break-word;
+}
+
+/* ── Save Button ── */
+.rd-save-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  background: var(--green-pale);
+  border: 2px solid var(--green-light);
+  color: var(--green-mid);
+  font-size: 0.9rem;
+  font-family: inherit;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+  padding: 11px 22px;
+  border-radius: 50px;
+  cursor: pointer;
+  white-space: nowrap;
+  flex-shrink: 0;
+  transition: background 0.22s ease, color 0.22s ease, border-color 0.22s ease,
+    box-shadow 0.22s ease, transform 0.15s ease;
+}
+.rd-save-btn:hover {
+  background: var(--green-soft);
+  border-color: var(--green-soft);
+  color: var(--warm-white);
+  box-shadow: 0 5px 18px rgba(61, 139, 61, 0.3);
+  transform: translateY(-2px);
+}
+.rd-save-btn--saved {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: var(--green-deep);
+}
+.rd-save-btn--saved:hover {
+  background: #b8954f;
+  border-color: #b8954f;
+  color: var(--green-deep);
+}
+.rd-heart-icon {
+  width: 18px;
+  height: 18px;
+  flex-shrink: 0;
+  color: currentColor;
+  transition: transform 0.2s ease;
+}
+.rd-save-btn:hover .rd-heart-icon {
+  transform: scale(1.2);
+}
+
+/* ── Sections ── */
+.rd-section {
+  margin-bottom: 48px;
+}
+.rd-section-title {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--green-deep);
+  margin: 0 0 24px;
+  letter-spacing: 0.01em;
+}
+.rd-section-accent {
+  display: inline-block;
+  width: 5px;
+  height: 24px;
+  background: linear-gradient(to bottom, var(--green-soft), var(--accent));
+  border-radius: 3px;
+  flex-shrink: 0;
+}
+
+/* ── Nutrition Grid ── */
+.rd-nutrition-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+  gap: 14px;
+}
+.rd-nutrition-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  background: var(--warm-white);
+  border: 1px solid var(--green-light);
+  border-radius: 16px;
+  padding: 20px 12px 16px;
+  gap: 4px;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+.rd-nutrition-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 24px rgba(10, 46, 10, 0.1);
+}
+.rd-nutrition-icon {
+  font-size: 1.5rem;
+  margin-bottom: 6px;
+}
+.rd-nutrition-value {
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: var(--green-deep);
+  line-height: 1;
+}
+.rd-nutrition-unit {
+  font-size: 0.7rem;
+  color: var(--text-light);
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+.rd-nutrition-label {
+  font-size: 0.8rem;
+  color: var(--text-mid);
+  font-weight: 600;
+  margin-top: 4px;
+}
+
+/* ── Ingredients ── */
+.rd-ingredients-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 15px;
+}
+.rd-ingredient-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: var(--warm-white);
+  border: 1px solid var(--green-pale);
+  border-radius: 10px;
+  padding: 12px 14px;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+.rd-ingredient-item:hover {
+  border-color: var(--green-light);
+  box-shadow: 0 2px 10px rgba(10, 46, 10, 0.07);
+}
+.rd-ingredient-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--green-soft);
+  flex-shrink: 0;
+}
+.rd-ingredient-name {
+  font-size: 0.92rem;
+  color: var(--text-dark);
+  font-weight: 500;
+  flex: 1;
+}
+.rd-ingredient-measure {
+  font-size: 0.8rem;
+  color: var(--accent);
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+/* ── Steps ── */
+.rd-steps-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  position: relative;
+}
+/* vertical connector line */
+.rd-steps-list::before {
+  content: "";
+  position: absolute;
+  left: 22px;
+  top: 44px;
+  bottom: 20px;
+  width: 2px;
+  background: linear-gradient(to bottom, var(--green-light), transparent);
+  pointer-events: none;
+}
+.rd-step-card {
+  display: flex;
+  gap: 18px;
+  align-items: flex-start;
+  background: var(--warm-white);
+  border: 1px solid var(--green-pale);
+  border-radius: 14px;
+  padding: 20px 22px;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
+}
+.rd-step-card:hover {
+  border-color: var(--green-light);
+  box-shadow: 0 6px 22px rgba(10, 46, 10, 0.09);
+  transform: translateX(3px);
+}
+.rd-step-number {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--green-mid), var(--green-soft));
+  color: var(--warm-white);
+  font-size: 0.95rem;
+  font-weight: 800;
+  box-shadow: 0 3px 10px rgba(26, 92, 26, 0.3);
+}
+.rd-step-body {
+  flex: 1;
+  min-width: 0;
+}
+.rd-step-label {
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--green-soft);
+  margin: 0 0 6px;
+}
+.rd-step-text {
+  font-size: 0.97rem;
+  line-height: 1.7;
+  color: var(--text-mid);
+  margin: 0;
+}
+
+/* ── Footer Back ── */
+.rd-footer-back {
+  margin-top: 48px;
+  padding-top: 32px;
+  border-top: 1px solid var(--green-pale);
+}
+
+/* ── Responsive ── */
+@media (max-width: 640px) {
+  .rd-back-wrapper {
+    padding: 16px 16px 0;
+  }
+  .rd-hero {
+    margin-top: 14px;
+    padding: 0 16px;
+  }
+  .rd-hero-image-wrap {
+    aspect-ratio: 4 / 3;
+    border-radius: 14px;
+  }
+  .rd-container {
+    padding: 0 16px 48px;
+  }
+  .rd-title-row {
+    flex-direction: column;
+    gap: 14px;
+    margin: 24px 0 32px;
+  }
+  .rd-save-btn {
+    width: 100%;
+    justify-content: center;
+  }
+  .rd-nutrition-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+  .rd-ingredients-list {
+    grid-template-columns: 1fr;
+  }
+  .rd-steps-list::before {
+    left: 19px;
+  }
+  .rd-step-card {
+    padding: 16px;
+    gap: 14px;
+  }
+  .rd-step-number {
+    width: 34px;
+    height: 34px;
+    font-size: 0.85rem;
+  }
+}

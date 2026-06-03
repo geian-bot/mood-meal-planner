@@ -442,7 +442,7 @@ export default function CalendarPage() {
 
   return (
     <div className="calendar-page">
-      <Navbar username={username} />
+      <Navbar />
 
       <div className="cal-layout">
         {/* ── SIDEBAR ── */}
