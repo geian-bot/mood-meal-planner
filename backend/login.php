@@ -3,7 +3,7 @@ session_start();
 
 $allowed_origins = [
     "http://localhost:5173",
-    "https://your-vercel-app.vercel.app" // ← you'll fill this in later
+    "https://mood-meal-planner-production.up.railway.app" // ← you'll fill this in later
 ];
 
 $origin = $_SERVER['HTTP_ORIGIN'] ?? '';
