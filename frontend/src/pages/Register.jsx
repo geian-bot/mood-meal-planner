@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "./login.css";
 import logo from "../assets/cook-orbit.png";
+import BASE_URL from "../utils/api";
 
 export default function Register() {
   const navigate = useNavigate();
@@ -17,12 +18,13 @@ export default function Register() {
 
     try {
       const res = await fetch(
-        "http://localhost/MOOD-MEAL-PLANNER/backend/register.php",
+        `${BASE_URL}/register.php`,
         {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
           },
+          credentials: "include",
           body: JSON.stringify({
             username,
             password,
@@ -32,7 +34,7 @@ export default function Register() {
 
       const data = await res.json();
 
-      if (data.success || data.message === "User registered successfully") {
+      if (data.success) {
         alert("Registered successfully!");
         navigate("/login");
       } else {
@@ -40,7 +42,7 @@ export default function Register() {
       }
     } catch (error) {
       console.log(error);
-      alert("Server error. Check XAMPP + backend URL.");
+      alert("Server error.");
     }
   };
 
@@ -48,15 +50,11 @@ export default function Register() {
     <div className="login-page">
       <div className="login-overlay">
         <div className="login-card">
-
           <img src={logo} alt="Cook Orbit" className="login-logo" />
-
           <h2>Create Account</h2>
-
           <p className="login-subtitle">
             Start planning meals that fit your mood and lifestyle.
           </p>
-
           <input
             type="text"
             placeholder="Username"
@@ -64,7 +62,6 @@ export default function Register() {
             onChange={(e) => setUsername(e.target.value)}
             className="login-input"
           />
-
           <input
             type="password"
             placeholder="Password"
@@ -72,21 +69,13 @@ export default function Register() {
             onChange={(e) => setPassword(e.target.value)}
             className="login-input"
           />
-
-          <button
-            onClick={handleRegister}
-            className="login-button"
-          >
+          <button onClick={handleRegister} className="login-button">
             Register
           </button>
-
           <p className="login-text">
             Already have an account?{" "}
-            <span onClick={() => navigate("/login")}>
-              Login here
-            </span>
+            <span onClick={() => navigate("/login")}>Login here</span>
           </p>
-
         </div>
       </div>
     </div>

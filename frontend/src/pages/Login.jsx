@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { MealContext } from "../context/MealContext";
 import "./login.css";
 import logo from "../assets/cook-orbit.png";
+import BASE_URL from "../utils/api";
 
 export default function Login() {
   const navigate = useNavigate();
@@ -20,16 +21,13 @@ export default function Login() {
 
     try {
       const res = await fetch(
-        "http://localhost/MOOD-MEAL-PLANNER/backend/login.php",
+        `${BASE_URL}/login.php`,
         {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
           },
-
-          // REQUIRED for PHP sessions
           credentials: "include",
-
           body: JSON.stringify({
             username: inputUsername,
             password: inputPassword,
@@ -51,28 +49,20 @@ export default function Login() {
       }
     } catch (error) {
       console.log("FETCH ERROR:", error);
-      alert("Server error. Check XAMPP + backend URL.");
+      alert("Server error.");
     }
   };
 
   return (
     <div className="login-page">
-
       <div className="login-overlay">
-
         <div className="login-card">
-
-          
           <img src={logo} alt="Cook Orbit" className="login-logo" />
-
-          <h3 className="login-brand">
-            Cook Orbit
-          </h3>
+          <h3 className="login-brand">Cook Orbit</h3>
           <h2>Welcome Back</h2>
           <p className="login-subtitle">
             Continue planning meals that fit your mood.
           </p>
-
           <input
             type="text"
             placeholder="Username"
@@ -80,7 +70,6 @@ export default function Login() {
             onChange={(e) => setInputUsername(e.target.value)}
             className="login-input"
           />
-
           <input
             type="password"
             placeholder="Password"
@@ -88,11 +77,9 @@ export default function Login() {
             onChange={(e) => setInputPassword(e.target.value)}
             className="login-input"
           />
-
           <button onClick={handleLogin} className="login-button">
             Login
           </button>
-
           <button
             className="login-button guest-btn"
             onClick={() => {
@@ -103,18 +90,12 @@ export default function Login() {
           >
             Continue as Guest
           </button>
-
           <p className="login-text">
             Don&apos;t have an account?{" "}
-            <span onClick={() => navigate("/register")}>
-              Register now
-            </span>
+            <span onClick={() => navigate("/register")}>Register now</span>
           </p>
-
         </div>
-
       </div>
-
     </div>
   );
 }
