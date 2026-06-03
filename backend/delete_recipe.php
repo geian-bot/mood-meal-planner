@@ -14,20 +14,28 @@ if ($is_allowed) {
     header("Access-Control-Allow-Origin: $origin");
     header("Access-Control-Allow-Credentials: true");
     header("Access-Control-Allow-Headers: Content-Type");
-    header("Access-Control-Allow-Methods: GET, OPTIONS");
+    header("Access-Control-Allow-Methods: POST, OPTIONS");
 }
 header("Content-Type: application/json");
 if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') { http_response_code(204); exit; }
 
-if (isset($_SESSION["user_id"])) {
-    echo json_encode([
-        "loggedIn" => true,
-        "user" => [
-            "id"       => $_SESSION["user_id"],
-            "username" => $_SESSION["username"]
-        ]
-    ]);
+if (!isset($_SESSION['user_id'])) {
+    echo json_encode(["success" => false, "message" => "Not logged in"]);
+    exit;
+}
+
+include "db.php";
+
+$data = json_decode(file_get_contents("php://input"), true);
+$id      = intval($data['id'] ?? 0);
+$user_id = $_SESSION['user_id'];
+
+$stmt = $conn->prepare("DELETE FROM recipes WHERE id = ? AND user_id = ?");
+$stmt->bind_param("ii", $id, $user_id);
+
+if ($stmt->execute() && $stmt->affected_rows > 0) {
+    echo json_encode(["success" => true]);
 } else {
-    echo json_encode(["loggedIn" => false]);
+    echo json_encode(["success" => false, "message" => "Delete failed or not authorized"]);
 }
 ?>
