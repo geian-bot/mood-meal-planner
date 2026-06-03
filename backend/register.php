@@ -1,17 +1,21 @@
 <?php
+$origin = $_SERVER['HTTP_ORIGIN'] ?? '';
+
 $allowed_origins = [
-    "http://localhost:5173",
-    "https://https://mood-meal-planner.vercel.app/" // ← fill this in later
+    "https://mood-meal-planner.vercel.app",
+    "http://localhost:5173"
 ];
 
-$origin = $_SERVER['HTTP_ORIGIN'] ?? '';
-if (in_array($origin, $allowed_origins)) {
+$is_allowed = in_array($origin, $allowed_origins) ||
+              preg_match('/^https:\/\/mood-meal-planner.*\.vercel\.app$/', $origin);
+
+if ($is_allowed) {
     header("Access-Control-Allow-Origin: $origin");
+    header("Access-Control-Allow-Credentials: true");
+    header("Access-Control-Allow-Headers: Content-Type");
+    header("Access-Control-Allow-Methods: POST, OPTIONS");
 }
 
-header("Access-Control-Allow-Credentials: true");
-header("Access-Control-Allow-Headers: Content-Type");
-header("Access-Control-Allow-Methods: POST, OPTIONS");
 header("Content-Type: application/json");
 
 if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
@@ -20,7 +24,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
 }
 
 include "db.php";
-
+// ... rest of your file stays exactly the same
 $data = json_decode(file_get_contents("php://input"), true);
 
 if (!isset($data["username"]) || !isset($data["password"])) {
