@@ -102,7 +102,15 @@ export default function CalendarPage() {
           shaped[row.date_key].meals.push({
             id: row.id,
             type: row.meal_type,
+
+            mood: {
+              value: row.mood_value,
+              emoji: row.mood_emoji,
+              label: row.mood_label,
+            },
+
             notes: row.notes || "",
+
             recipe: {
               idMeal: row.recipe_id,
               strMeal: row.recipe_name,
@@ -247,10 +255,10 @@ export default function CalendarPage() {
         return {
           ...prev,
           [key]: {
-            mood: selectedMood,
             meals: [...existing.meals, {
               id: data.id,
               type: selectedMealType,
+              mood: selectedMood,
               recipe: selectedRecipe,
               notes: "",
             }],
@@ -271,7 +279,7 @@ export default function CalendarPage() {
     if (!entry) return;
     const meal = entry.meals[index];
     setEditTarget({ key, index });
-    setEditMood(entry.mood);
+    setEditMood(meal.mood);
     setEditMealType(meal.type);
     setEditRecipe(meal.recipe);
     setEditNotes(meal.notes || "");
@@ -384,7 +392,7 @@ export default function CalendarPage() {
           <div className="cal-date-num">{d}</div>
           {entry && (
             <>
-              <span className="cal-mood-badge">{entry.mood.emoji}</span>
+              <span className="cal-mood-badge">{entry.meals[0]?.mood?.emoji}</span>
               {entry.meals.slice(0, 2).map((m, i) => (
                 <div key={i} className="cal-meal-pill" onClick={(e) => { e.stopPropagation(); openEditModal(key, i); }}>
                   {m.type === "Breakfast" ? "🍳" : m.type === "Lunch" ? "🥗" : m.type === "Dinner" ? "🍝" : "🍎"} {m.recipe?.strMeal?.split(" ").slice(0, 2).join(" ") || m.recipe?.strMeal || ""}
@@ -463,43 +471,80 @@ export default function CalendarPage() {
         <div className="daily-content">
           <div className="daily-meals">
             {MEAL_TYPES.map((type) => {
-              const meal = entry?.meals.find((m) => m.type === type);
-              const idx = entry?.meals.findIndex((m) => m.type === type);
+              const mealsOfType =
+                entry?.meals
+                  ?.map((meal, index) => ({ meal, index }))
+                  .filter((item) => item.meal.type === type) || [];
+
               return (
                 <div key={type} className="daily-meal-slot">
+
                   <div className="dms-type">
-                    {type === "Breakfast" ? "🍳" : type === "Lunch" ? "🥗" : type === "Dinner" ? "🍝" : "🍎"} {type}
+                    {type === "Breakfast"
+                      ? "🍳"
+                      : type === "Lunch"
+                      ? "🥗"
+                      : type === "Dinner"
+                      ? "🍝"
+                      : "🍎"}{" "}
+                    {type}
                   </div>
-                  {meal ? (
-                    <div className="dms-recipe">
-                      {meal.recipe?.strMealThumb && (
-                        <img
-                          src={meal.recipe.strMealThumb}
-                          alt={meal.recipe.strMeal}
-                          className="dms-img"
-                        />
-                      )}
 
-                      <div
-                        className="dms-info"
-                        onClick={() => openEditModal(key, idx)}
-                      >
-                        <span className="dms-name">{meal.recipe?.strMeal}</span>
-                        {meal.notes && (
-                          <span className="dms-notes">{meal.notes}</span>
+                  {mealsOfType.length > 0 ? (
+                    mealsOfType.map(({ meal, index }) => (
+                      <div key={index} className="dms-recipe">
+
+                        {meal.recipe?.strMealThumb && (
+                          <img
+                            src={meal.recipe.strMealThumb}
+                            alt={meal.recipe.strMeal}
+                            className="dms-img"
+                          />
                         )}
-                      </div>
 
-                      <button
-                        className="check-recipe-btn"
-                        onClick={() => navigate(`/recipe/${meal.recipe.idMeal}`)}
-                      >
-                        Check Recipe
-                      </button>
-                    </div>
+                        <div
+                          className="dms-info"
+                          onClick={() => openEditModal(key, index)}
+                        >
+                          <div className="dms-name-row">
+                            <span className="dms-name">
+                              {meal.recipe?.strMeal}
+                            </span>
+
+                            {meal.mood && (
+                              <span className="meal-mood-badge">
+                                {meal.mood.emoji} {meal.mood.label}
+                              </span>
+                            )}
+                          </div>
+
+                          {meal.notes && (
+                            <span className="dms-notes">
+                              {meal.notes}
+                            </span>
+                          )}
+                        </div>
+
+                        <button
+                          className="check-recipe-btn"
+                          onClick={() =>
+                            navigate(`/recipe/${meal.recipe.idMeal}`)
+                          }
+                        >
+                          📖 Check Recipe
+                        </button>
+
+                      </div>
+                    ))
                   ) : (
-                    <button className="dms-add" onClick={() => openAddModal(currentDate)}>+ Add {type}</button>
+                    <button
+                      className="dms-add"
+                      onClick={() => openAddModal(currentDate)}
+                    >
+                      + Add {type}
+                    </button>
                   )}
+
                 </div>
               );
             })}
