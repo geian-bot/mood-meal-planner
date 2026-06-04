@@ -172,7 +172,7 @@ export default function RecipeDetails() {
             disabled={bookmarkLoading}
             onClick={async () => {
               if (isGuest) {
-                navigate("/login");
+                alert("Guest mode cannot save recipes. Please log in");
                 return;
               }
 
