@@ -471,14 +471,31 @@ export default function CalendarPage() {
                     {type === "Breakfast" ? "🍳" : type === "Lunch" ? "🥗" : type === "Dinner" ? "🍝" : "🍎"} {type}
                   </div>
                   {meal ? (
-                    <div className="dms-recipe" onClick={() => openEditModal(key, idx)}>
+                    <div className="dms-recipe">
                       {meal.recipe?.strMealThumb && (
-                        <img src={meal.recipe.strMealThumb} alt={meal.recipe.strMeal} className="dms-img" />
+                        <img
+                          src={meal.recipe.strMealThumb}
+                          alt={meal.recipe.strMeal}
+                          className="dms-img"
+                        />
                       )}
-                      <div className="dms-info">
+
+                      <div
+                        className="dms-info"
+                        onClick={() => openEditModal(key, idx)}
+                      >
                         <span className="dms-name">{meal.recipe?.strMeal}</span>
-                        {meal.notes && <span className="dms-notes">{meal.notes}</span>}
+                        {meal.notes && (
+                          <span className="dms-notes">{meal.notes}</span>
+                        )}
                       </div>
+
+                      <button
+                        className="check-recipe-btn"
+                        onClick={() => navigate(`/recipe/${meal.recipe.idMeal}`)}
+                      >
+                        Check Recipe
+                      </button>
                     </div>
                   ) : (
                     <button className="dms-add" onClick={() => openAddModal(currentDate)}>+ Add {type}</button>
@@ -574,11 +591,22 @@ export default function CalendarPage() {
                 <h3 className="sidebar-heading">Quick Actions</h3>
                 <button className="qa-btn" onClick={() => openAddModal(selectedDate)}>➕ Add Meal</button>
                 <button className="qa-btn" onClick={() => setShowCalcModal(true)}>🔥 Calculate Calories</button>
-                <button className="qa-btn" onClick={() => {
-                  const moods = MOODS[Math.floor(Math.random() * MOODS.length)];
-                  openAddModal(selectedDate);
-                  setTimeout(() => handleMoodSelect(moods), 100);
-                }}>🎲 Generate Plan</button>
+                <button
+                  className="qa-btn"
+                  disabled={!mealData[dateKey(selectedDate)]}
+                  onClick={() => {
+                    const dayMeals = mealData[dateKey(selectedDate)]?.meals || [];
+
+                    if (dayMeals.length === 1) {
+                      navigate(`/recipe/${dayMeals[0].recipe.idMeal}`);
+                    } else if (dayMeals.length > 1) {
+                      setCurrentDate(selectedDate);
+                      setView("Daily");
+                    }
+                  }}
+                >
+                  📖 Check Recipe
+                </button>
               </div>
 
               <div className="sidebar-section">
@@ -809,9 +837,35 @@ export default function CalendarPage() {
               />
 
               <div className="edit-actions">
-                <button className="btn-delete" onClick={() => setShowDeleteConfirm(true)}>🗑 Delete</button>
-                <button className="modal-back" onClick={() => setShowEditModal(false)}>Cancel</button>
-                <button className="modal-save" onClick={updateMeal}>Update Meal</button>
+                <button
+                  className="qa-btn"
+                  onClick={() =>
+                    navigate(`/recipe/${editRecipe?.idMeal}`)
+                  }
+                >
+                  Check Recipe
+                </button>
+
+                <button
+                  className="btn-delete"
+                  onClick={() => setShowDeleteConfirm(true)}
+                >
+                  Delete
+                </button>
+
+                <button
+                  className="modal-back"
+                  onClick={() => setShowEditModal(false)}
+                >
+                  Cancel
+                </button>
+
+                <button
+                  className="modal-save"
+                  onClick={updateMeal}
+                >
+                  Update Meal
+                </button>
               </div>
             </div>
           </div>

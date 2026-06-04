@@ -982,3 +982,28 @@
   .cal-toolbar { gap: 10px; }
   .cal-view-title { display: none; }
 }
+
+.qa-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.check-recipe-btn {
+  margin-left: auto;
+  padding: 8px 14px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  white-space: nowrap;
+}
+
+.dms-recipe {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.dms-info {
+  flex: 1;
+}
