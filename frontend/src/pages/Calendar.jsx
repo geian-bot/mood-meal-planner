@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import Navbar from "../components/Navbar";
 import { MealContext } from "../context/MealContext";
 import "./calendar.css";
+import { API } from "../utils/api";
 
 /* ── CONSTANTS ── */
 const VIEWS = ["Daily", "Weekly", "Monthly", "Yearly"];
@@ -71,7 +72,52 @@ export default function CalendarPage() {
   const [view, setView] = useState("Monthly");
   const [currentDate, setCurrentDate] = useState(new Date());
   const [selectedDate, setSelectedDate] = useState(new Date());
-  const [mealData, setMealData] = useState({});       // { dateKey: { mood, meals: [{type, recipe}] } }
+  const [mealData, setMealData] = useState({});
+
+  useEffect(() => {
+    const loadMeals = async () => {
+      const user_id = localStorage.getItem("user_id");
+      if (!user_id) return;
+      try {
+        const res = await fetch(API.getMeals, {
+          credentials: "include",
+          headers: { "X-User-Id": user_id }
+        });
+        const data = await res.json();
+        if (!data.success) return;
+
+        // reshape flat DB rows back into { [dateKey]: { mood, meals: [] } }
+        const shaped = {};
+        data.meals.forEach((row) => {
+          if (!shaped[row.date_key]) {
+            shaped[row.date_key] = {
+              mood: {
+                value: row.mood_value,
+                emoji: row.mood_emoji,
+                label: row.mood_label,
+              },
+              meals: [],
+            };
+          }
+          shaped[row.date_key].meals.push({
+            id: row.id,
+            type: row.meal_type,
+            notes: row.notes || "",
+            recipe: {
+              idMeal: row.recipe_id,
+              strMeal: row.recipe_name,
+              strMealThumb: row.recipe_thumb,
+            },
+          });
+        });
+        setMealData(shaped);
+      } catch (err) {
+        console.error("Failed to load meals:", err);
+      }
+    };
+    loadMeals();
+  }, []);
+
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [nutritionGoals, setNutritionGoals] = useState({ calories: 2200, protein: 120, carbs: 250, fat: 70 });
 
@@ -160,19 +206,62 @@ export default function CalendarPage() {
     fetchRecipesByMood(mood.value);
   };
 
-  const saveMeal = () => {
+  const saveMeal = async () => {
     if (!modalDate || !selectedMood || !selectedMealType || !selectedRecipe) return;
+
+    const user_id = localStorage.getItem("user_id");
+    if (!user_id) {
+      navigate("/login");
+      return;
+    }
+
     const key = dateKey(modalDate);
-    setMealData((prev) => {
-      const existing = prev[key] || { mood: selectedMood, meals: [] };
-      return {
-        ...prev,
-        [key]: {
-          mood: selectedMood,
-          meals: [...existing.meals, { type: selectedMealType, recipe: selectedRecipe }],
+
+    try {
+      const res = await fetch(API.saveMeal, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "X-User-Id": user_id
         },
-      };
-    });
+        credentials: "include",
+        body: JSON.stringify({
+          date_key:     key,
+          mood_value:   selectedMood.value,
+          mood_emoji:   selectedMood.emoji,
+          mood_label:   selectedMood.label,
+          meal_type:    selectedMealType,
+          recipe_id:    selectedRecipe.idMeal,
+          recipe_name:  selectedRecipe.strMeal,
+          recipe_thumb: selectedRecipe.strMealThumb,
+          notes:        "",
+        }),
+      });
+
+      const data = await res.json();
+      if (!data.success) { alert("Failed to save meal."); return; }
+
+      // update local state with the DB-assigned id
+      setMealData((prev) => {
+        const existing = prev[key] || { mood: selectedMood, meals: [] };
+        return {
+          ...prev,
+          [key]: {
+            mood: selectedMood,
+            meals: [...existing.meals, {
+              id: data.id,
+              type: selectedMealType,
+              recipe: selectedRecipe,
+              notes: "",
+            }],
+          },
+        };
+      });
+    } catch (err) {
+      console.error(err);
+      alert("Server error. Please try again.");
+    }
+
     setShowAddModal(false);
   };
 
@@ -203,9 +292,28 @@ export default function CalendarPage() {
     setShowEditModal(false);
   };
 
-  const deleteMeal = () => {
+  const deleteMeal = async () => {
     if (!editTarget) return;
     const { key, index } = editTarget;
+    const meal = mealData[key]?.meals[index];
+    const user_id = localStorage.getItem("user_id");
+
+    if (meal?.id && user_id) {
+      try {
+        await fetch(API.deleteMeal, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "X-User-Id": user_id
+          },
+          credentials: "include",
+          body: JSON.stringify({ id: meal.id }),
+        });
+      } catch (err) {
+        console.error(err);
+      }
+    }
+
     setMealData((prev) => {
       const updated = { ...prev[key] };
       updated.meals = updated.meals.filter((_, i) => i !== index);
@@ -216,6 +324,7 @@ export default function CalendarPage() {
       }
       return { ...prev, [key]: updated };
     });
+
     setShowDeleteConfirm(false);
     setShowEditModal(false);
   };
