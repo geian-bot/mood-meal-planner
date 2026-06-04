@@ -20,6 +20,11 @@ export default function Recipes() {
   const [activeTab, setActiveTab] = useState("all"); // "all" | "mine"
   const mealsPerPage = 12;
 
+  const searchAliases = {
+    "healthy":      ["Vegetarian", "Vegan", "Seafood", "Starter"],
+    "comfort food": ["Pasta", "Beef", "Dessert", "Miscellaneous"],
+  };
+
   const moodKeywords = {
     "stressed/anxious": ["chicken soup", "rice", "salmon", "oatmeal"],
     sad: ["chocolate", "pasta", "ice cream", "cake"],
@@ -110,6 +115,25 @@ export default function Recipes() {
         let detailed = [];
 
         if (searchQuery) {
+          // check aliases first (e.g. "healthy", "comfort food")
+          const alias = searchAliases[searchQuery.toLowerCase()];
+          if (alias) {
+            const aliasResults = await Promise.allSettled(
+              alias.map((cat) =>
+                fetch(`https://www.themealdb.com/api/json/v1/1/filter.php?c=${cat}`).then(r => r.json())
+              )
+            );
+            const aliasCombined = aliasResults
+              .filter(r => r.status === "fulfilled")
+              .flatMap(r => r.value.meals || []);
+            const aliasUnique = aliasCombined.filter((m, i, self) => i === self.findIndex((x) => x.idMeal === m.idMeal));
+            detailed = await fetchInBatches(aliasUnique.slice(0, 60), 10);
+            setMeals(detailed);
+            setCurrentPage(1);
+            setLoading(false);
+            return;
+          }
+
           // search by name AND by category simultaneously
           const [nameRes, catRes] = await Promise.allSettled([
             fetch(`https://www.themealdb.com/api/json/v1/1/search.php?s=${searchQuery}`).then(r => r.json()),
