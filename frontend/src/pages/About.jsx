@@ -4,7 +4,7 @@ import logo from "../assets/cook-orbit.png";
 import geian from "../assets/geian.jpg";
 import ysabelle from "../assets/ysabelle.jpg";
 import alliyah from "../assets/alliyah.png";
-  
+import { useNavigate } from "react-router-dom";
 export default function About() {
 
   const navigate = useNavigate();
