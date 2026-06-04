@@ -1,13 +1,10 @@
 import Navbar from "../components/Navbar";
 import "./about.css";
 import logo from "../assets/cook-orbit.png";
-<<<<<<< HEAD
 import { useNavigate } from "react-router-dom";
-=======
 import geian from "../assets/geian.jpg";
 import ysabelle from "../assets/ysabelle.jpg";
 import alliyah from "../assets/alliyah.png";
->>>>>>> c4634a9a16e01c246b9bcd3bfac1cf296bede964
 
 export default function About() {
 
