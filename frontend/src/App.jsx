@@ -10,6 +10,7 @@ import Calendar from "./pages/Calendar.jsx";
 import CreateRecipe from "./pages/Createrecipe.jsx";
 import SavedRecipes from "./pages/SavedRecipes.jsx";
 import CreatedRecipes from "./pages/CreatedRecipes.jsx";
+import CreatedRecipeDetails from "./pages/CreatedRecipeDetails.jsx";
 
 function App() {
   return (
@@ -31,6 +32,8 @@ function App() {
         <Route path="/recipe/:id" element={<RecipeDetails />} />
         <Route path="/calendar" element={<Calendar />} />
         <Route path="/about" element={<About />} />
+
+        <Route path="/created-recipe/:id" element={<CreatedRecipeDetails />} />
       </Routes>
     </BrowserRouter>
   );

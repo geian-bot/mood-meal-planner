@@ -187,6 +187,7 @@ export default function SavedRecipes() {
               </div>
 
               <div className="sr-card-actions">
+                <button className="sr-edit-btn" onClick={() => navigate(`/created-recipe/${recipe.id}`, { state: { recipe } })}>👁 View</button>
                 <button className="sr-edit-btn" onClick={() => openEdit(recipe)}>✏️ Edit</button>
                 <button className="sr-delete-btn" onClick={() => setDeleteConfirmId(recipe.id)}>🗑 Delete</button>
               </div>
