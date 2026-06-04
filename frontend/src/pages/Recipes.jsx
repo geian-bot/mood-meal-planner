@@ -74,7 +74,13 @@ export default function Recipes() {
           const ingredients = [];
           for (let j = 1; j <= 20; j++) {
             const ing = full[`strIngredient${j}`];
-            if (ing && ing.trim()) ingredients.push(ing.trim());
+            const measure = full[`strMeasure${j}`];
+            if (ing && ing.trim()) {
+              ingredients.push({
+                name: ing.trim(),
+                measure: measure?.trim() || ""
+              });
+            }
           }
           const ingredientCount = ingredients.length;
           const estimatedCookTime = ingredientCount <= 5 ? 15 : ingredientCount <= 10 ? 30 : 45;
@@ -82,7 +88,7 @@ export default function Recipes() {
           const servings = ingredientCount <= 5 ? 1 : 2;
           let score = 60;
           ingredients.forEach((ing) => {
-            const lower = ing.toLowerCase();
+            const lower = ing.name.toLowerCase(); // ← use ing.name
             meat.forEach((m) => { if (lower.includes(m)) score -= 35; });
             dairyEgg.forEach((d) => { if (lower.includes(d)) score -= 15; });
             plant.forEach((p) => { if (lower.includes(p)) score += 5; });
@@ -91,7 +97,7 @@ export default function Recipes() {
           const tags = [];
           if (estimatedCookTime <= 20) { tags.push("Fast"); tags.push("Easy"); }
           if (score >= 65) tags.push("Vegetarian");
-          if (ingredients.some((i) => ["spinach","beans","broccoli","lentils"].includes(i.toLowerCase()))) {
+          if (ingredients.some((i) => ["spinach","beans","broccoli","lentils"].includes(i.name.toLowerCase()))) {
             tags.push("Nutrient Dense");
           }
           return {
@@ -102,7 +108,7 @@ export default function Recipes() {
         })
       );
       results.push(...batchResults.filter((r) => r.status === "fulfilled").map((r) => r.value));
-      if (i + batchSize < ids.length) await new Promise((r) => setTimeout(r, 150));
+      if (i + batchSize < ids.length) await new Promise((r) => setTimeout(r, 500));
     }
     return results;
   };
@@ -127,7 +133,7 @@ export default function Recipes() {
               .filter(r => r.status === "fulfilled")
               .flatMap(r => r.value.meals || []);
             const aliasUnique = aliasCombined.filter((m, i, self) => i === self.findIndex((x) => x.idMeal === m.idMeal));
-            detailed = await fetchInBatches(aliasUnique.slice(0, 60), 10);
+            detailed = await fetchInBatches(aliasUnique.slice(0, 60), 5);
             setMeals(detailed);
             setCurrentPage(1);
             setLoading(false);
@@ -151,7 +157,7 @@ export default function Recipes() {
           const nameIds = new Set(nameMatches.map(m => m.idMeal));
           const needsLookup = unique.filter(m => !nameIds.has(m.idMeal));
 
-          const lookedUp = await fetchInBatches(needsLookup, 10);
+          const lookedUp = await fetchInBatches(needsLookup, 5);
 
           // enrich name results with computed fields
           const enrichedNameMatches = nameMatches.map((meal) => {
@@ -195,7 +201,7 @@ export default function Recipes() {
           const combined = results.filter((r) => r.status === "fulfilled").flatMap((r) => r.value.meals || []);
           const unique = combined.filter((m, i, self) => i === self.findIndex((x) => x.idMeal === m.idMeal));
           const toFetch = moodQuery ? unique : unique.slice(0, 300);
-          detailed = await fetchInBatches(toFetch, 10);
+          detailed = await fetchInBatches(toFetch, 5);
 
           if (moodQuery && moodKeywords[moodQuery]) {
             const keywords = moodKeywords[moodQuery];
