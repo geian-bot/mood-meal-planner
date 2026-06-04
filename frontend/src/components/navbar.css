@@ -146,6 +146,48 @@
   color: var(--green-deep);
 }
 
+.profile-dropdown {
+  position: relative;
+  display: inline-block;
+}
+
+.profile-trigger {
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--text-dark);
+  cursor: pointer;
+}
+
+.profile-dropdown-menu {
+  position: absolute;
+  top: calc(100% + 10px);
+  right: 0;
+  background: white;
+  border: 1.5px solid var(--border);
+  border-radius: 10px;
+  padding: 6px;
+  min-width: 140px;
+  box-shadow: 0 8px 24px rgba(0, 64, 0, 0.1);
+  z-index: 999;
+}
+
+.profile-logout-btn {
+  width: 100%;
+  padding: 8px 12px;
+  border: none;
+  background: transparent;
+  text-align: left;
+  font-size: 13px;
+  cursor: pointer;
+  border-radius: 6px;
+  color: var(--text-dark);
+}
+
+.profile-logout-btn:hover {
+  background: var(--green-pale);
+  color: var(--green-deep);
+}
+
 /* ── SEARCH TOGGLE BUTTON (hidden on desktop) ── */
 .search-toggle-btn {
   display: none;
@@ -189,6 +231,7 @@
   border: 1.5px solid var(--green-deep);
   background: #f9f9f9;
   font-size: 14px;
+  color: var(--text-dark); 
   font-family: 'Instrument Sans', sans-serif;
 }
 
@@ -336,6 +379,7 @@
   border-radius: 999px;
   border: 1.5px solid var(--border);
   background: #f9f9f9;
+  color: var(--text-dark);
   font-size: 14px;
   font-family: 'Instrument Sans', sans-serif;
   box-sizing: border-box;
@@ -532,7 +576,6 @@
   }
 
   .search-bar-collapsible {
-    /* visible when .open is toggled */
   }
 }
 

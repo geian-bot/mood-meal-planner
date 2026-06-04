@@ -1,8 +1,16 @@
 import Navbar from "../components/Navbar";
 import "./about.css";
 import logo from "../assets/cook-orbit.png";
+import { useNavigate } from "react-router-dom";
 
 export default function About() {
+
+  const navigate = useNavigate();
+  const handleStartPlanning = () => {
+    const savedUser = localStorage.getItem("username");
+    navigate(savedUser ? "/calendar" : "/login");
+  };
+
   return (
     <div className="about-page">
         <Navbar />
@@ -186,7 +194,7 @@ export default function About() {
           <h2>Ready to start<br />planning?</h2>
           <p>Find meals that match your mood today. Happy planning and happy eating!</p>
         </div>
-        <button className="cta-btn-dark">Start Planning →</button>
+        <button className="cta-btn-dark" onClick={handleStartPlanning}>Start Planning →</button>
       </div>
 
       {/* ── FOOTER ── */}
