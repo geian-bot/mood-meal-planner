@@ -1,7 +1,6 @@
 import { useEffect, useState, useContext } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import Navbar from "../components/Navbar";
-import createrecipe from "./Createrecipe";
 import { MealContext } from "../context/MealContext";
 import "./recipes.css";
 
@@ -108,31 +107,82 @@ export default function Recipes() {
       setLoading(true);
       setMeals([]);
       try {
-        const categories = moodQuery ? moodCategories[moodQuery] || ["Chicken"] : allCategories;
-        const results = await Promise.allSettled(
-          categories.map((cat) =>
-            fetch(`https://www.themealdb.com/api/json/v1/1/filter.php?c=${cat}`).then((r) => r.json())
-          )
-        );
-        const combined = results.filter((r) => r.status === "fulfilled").flatMap((r) => r.value.meals || []);
-        const unique = combined.filter((m, i, self) => i === self.findIndex((x) => x.idMeal === m.idMeal));
-        const toFetch = moodQuery ? unique : unique.slice(0, 300);
-        const detailed = await fetchInBatches(toFetch, 10);
+        let detailed = [];
 
-        let filteredMeals = detailed;
         if (searchQuery) {
-          filteredMeals = filteredMeals.filter((meal) =>
-            meal.strMeal.toLowerCase().includes(searchQuery.toLowerCase())
+          // search by name AND by category simultaneously
+          const [nameRes, catRes] = await Promise.allSettled([
+            fetch(`https://www.themealdb.com/api/json/v1/1/search.php?s=${searchQuery}`).then(r => r.json()),
+            fetch(`https://www.themealdb.com/api/json/v1/1/filter.php?c=${searchQuery}`).then(r => r.json()),
+          ]);
+
+          const nameMatches = nameRes.status === "fulfilled" ? (nameRes.value.meals || []) : [];
+          const catMatches  = catRes.status  === "fulfilled" ? (catRes.value.meals  || []) : [];
+
+          // combine and deduplicate
+          const combined = [...nameMatches, ...catMatches];
+          const unique = combined.filter((m, i, self) => i === self.findIndex((x) => x.idMeal === m.idMeal));
+
+          // name search results already have full data, cat results need lookup
+          const nameIds = new Set(nameMatches.map(m => m.idMeal));
+          const needsLookup = unique.filter(m => !nameIds.has(m.idMeal));
+
+          const lookedUp = await fetchInBatches(needsLookup, 10);
+
+          // enrich name results with computed fields
+          const enrichedNameMatches = nameMatches.map((meal) => {
+            const ingredients = [];
+            for (let j = 1; j <= 20; j++) {
+              const ing = meal[`strIngredient${j}`];
+              if (ing && ing.trim()) ingredients.push(ing.trim());
+            }
+            const ingredientCount = ingredients.length;
+            const estimatedCookTime = ingredientCount <= 5 ? 15 : ingredientCount <= 10 ? 30 : 45;
+            const estimatedCalories = ingredientCount * 80;
+            let score = 60;
+            ingredients.forEach((ing) => {
+              const lower = ing.toLowerCase();
+              meat.forEach((m) => { if (lower.includes(m)) score -= 35; });
+              dairyEgg.forEach((d) => { if (lower.includes(d)) score -= 15; });
+              plant.forEach((p) => { if (lower.includes(p)) score += 5; });
+            });
+            score = Math.max(0, Math.min(100, score));
+            const tags = [];
+            if (estimatedCookTime <= 20) { tags.push("Fast"); tags.push("Easy"); }
+            if (score >= 65) tags.push("Vegetarian");
+            return {
+              ...meal, ingredients, estimatedCookTime, estimatedCalories,
+              servings: ingredientCount <= 5 ? 1 : 2,
+              protein: ingredientCount * 5, carbs: ingredientCount * 7, fat: ingredientCount * 3,
+              vitamins: [], vegetarianScore: score, tags,
+            };
+          });
+
+          detailed = [...enrichedNameMatches, ...lookedUp];
+
+        } else {
+          // no search — fetch all categories as before
+          const categories = moodQuery ? moodCategories[moodQuery] || ["Chicken"] : allCategories;
+          const results = await Promise.allSettled(
+            categories.map((cat) =>
+              fetch(`https://www.themealdb.com/api/json/v1/1/filter.php?c=${cat}`).then((r) => r.json())
+            )
           );
+          const combined = results.filter((r) => r.status === "fulfilled").flatMap((r) => r.value.meals || []);
+          const unique = combined.filter((m, i, self) => i === self.findIndex((x) => x.idMeal === m.idMeal));
+          const toFetch = moodQuery ? unique : unique.slice(0, 300);
+          detailed = await fetchInBatches(toFetch, 10);
+
+          if (moodQuery && moodKeywords[moodQuery]) {
+            const keywords = moodKeywords[moodQuery];
+            const moodFiltered = detailed.filter((meal) =>
+              keywords.some((kw) => meal.strMeal.toLowerCase().includes(kw.toLowerCase()))
+            );
+            if (moodFiltered.length > 0) detailed = moodFiltered;
+          }
         }
-        if (moodQuery && moodKeywords[moodQuery]) {
-          const keywords = moodKeywords[moodQuery];
-          const moodFiltered = filteredMeals.filter((meal) =>
-            keywords.some((kw) => meal.strMeal.toLowerCase().includes(kw.toLowerCase()))
-          );
-          if (moodFiltered.length > 0) filteredMeals = moodFiltered;
-        }
-        setMeals(filteredMeals);
+
+        setMeals(detailed);
         setCurrentPage(1);
       } catch (err) {
         console.log(err);
