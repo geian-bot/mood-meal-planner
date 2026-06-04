@@ -12,10 +12,6 @@
   font-family: "Georgia", "Times New Roman", serif;
 }
 
-.navbar {
-  font-family: "Instrument Sans", sans-serif;
-}
-
 /* ── Loading ── */
 .rd-loading-screen {
   min-height: 100vh;
@@ -303,7 +299,7 @@
   margin: 0;
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-  gap: 15px;
+  gap: 10px;
 }
 .rd-ingredient-item {
   display: flex;

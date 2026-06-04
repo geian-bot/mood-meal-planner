@@ -571,6 +571,7 @@ body {
   gap: 16px;
   transition: background 0.2s ease;
   cursor: default;
+  text-align: left;
 }
 
 .stat-item:last-child { border-right: none; }

@@ -4,6 +4,7 @@ import Navbar from "../components/Navbar";
 import { MealContext } from "../context/MealContext";
 import "./createrecipe.css";
 import { API } from "../utils/api";
+import createdrecipes from "./Createdrecipes.jsx";
 
 const CATEGORIES = ["Breakfast", "Lunch", "Dinner", "Snack", "Dessert", "Side", "Starter"];
 const MOODS = [
@@ -126,7 +127,7 @@ export default function CreateRecipe() {
 
       if (data.success) {
         setSuccess(true);
-        setTimeout(() => navigate("/saved"), 1800);
+        setTimeout(() => navigate("/created"), 1800);
       } else {
         alert(data.message || "Failed to save recipe.");
       }

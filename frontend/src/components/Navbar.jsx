@@ -17,6 +17,8 @@
 
     const [profileOpen, setProfileOpen] = useState(false);
 
+    const [recipesOpen, setRecipesOpen] = useState(false);
+
     const toggleSidebar = () => {
       setSidebarOpen((prev) => !prev);
     };
@@ -53,6 +55,7 @@
       setProfileOpen(false);
     };
 
+    
     useEffect(() => {
       const handleClickOutside = () => setProfileOpen(false);
       if (profileOpen) window.addEventListener("click", handleClickOutside);
