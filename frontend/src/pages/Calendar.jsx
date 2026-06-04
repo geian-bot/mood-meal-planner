@@ -648,15 +648,12 @@ export default function CalendarPage() {
       <div className="cal-layout">
         {/* ── SIDEBAR ── */}
         <aside className={`cal-sidebar ${sidebarOpen ? "open" : "closed"}`}>
-          
+           <button className="sidebar-toggle" onClick={() => setSidebarOpen(!sidebarOpen)}>
+              {sidebarOpen ? "◀" : "▶"}
+            </button>
 
           {sidebarOpen && (
             <>
-              <div className="sidebar-section">
-                <button className="sidebar-toggle" onClick={() => setSidebarOpen(!sidebarOpen)}>
-                  {sidebarOpen ? "◀" : "▶"}
-                </button>
-              </div>
               <div className="sidebar-section">
                 <h3 className="sidebar-heading">Nutrition Today</h3>
                 <NutritionBar label="Calories" consumed={todayNutrition.calories} target={nutritionGoals.calories} unit=" kcal" color="#4caf50" />

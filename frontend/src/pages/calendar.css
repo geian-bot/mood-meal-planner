@@ -51,7 +51,7 @@
 .sidebar-toggle {
   position: absolute;
   top: 16px;
-  right: 0px;
+  right: -14px;
   width: 28px;
   height: 28px;
   border-radius: 50%;
