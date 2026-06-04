@@ -51,7 +51,7 @@
 .sidebar-toggle {
   position: absolute;
   top: 16px;
-  right: -14px;
+  right: 0px;
   width: 28px;
   height: 28px;
   border-radius: 50%;
@@ -969,9 +969,39 @@
 
 /* ── RESPONSIVE ── */
 @media (max-width: 1024px) {
-  .cal-sidebar { display: none; }
-  .yearly-view { grid-template-columns: repeat(3, 1fr); }
-  .daily-content { grid-template-columns: 1fr; }
+   .cal-sidebar {
+    position: fixed;
+    top: var(--navbar-h);
+    left: -280px;
+    width: var(--sidebar-w);
+    height: calc(100vh - var(--navbar-h));
+    z-index: 1000;
+    box-shadow: var(--shadow-lg);
+    transition: left 0.3s ease;
+  }
+
+  .cal-sidebar.open {
+    left: 0;
+    width: var(--sidebar-w);
+  }
+
+  .cal-sidebar.closed {
+    left: -240px; /* leaves toggle visible */
+    width: var(--sidebar-w);
+  }
+
+  .sidebar-toggle {
+    right: -40px;
+    display: flex;
+  }
+
+  .yearly-view {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  .daily-content {
+    grid-template-columns: 1fr;
+  }
 }
 
 @media (max-width: 768px) {
@@ -980,7 +1010,7 @@
   .mood-grid { grid-template-columns: repeat(2, 1fr); }
   .meal-type-grid { grid-template-columns: repeat(2, 1fr); }
   .cal-toolbar { gap: 10px; }
-  .cal-view-title { display: none; }
+  
 }
 
 .qa-btn:disabled {
