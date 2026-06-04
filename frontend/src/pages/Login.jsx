@@ -44,6 +44,7 @@ export default function Login() {
         setUsername(inputUsername);
         localStorage.setItem("username", inputUsername);
         localStorage.setItem("user_id", String(data.user_id));
+        localStorage.setItem("mode", "user");
         navigate("/calendar");
       } else {
         alert(data.message || "Login failed");
@@ -86,6 +87,7 @@ export default function Login() {
             onClick={() => {
               localStorage.removeItem("user_id");
               localStorage.setItem("username", "Guest");
+               localStorage.setItem("mode", "guest");
 
               setUsername("Guest");
 
