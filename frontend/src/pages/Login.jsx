@@ -84,8 +84,11 @@ export default function Login() {
           <button
             className="login-button guest-btn"
             onClick={() => {
+              localStorage.removeItem("user_id");
               localStorage.setItem("username", "Guest");
+
               setUsername("Guest");
+
               navigate("/calendar");
             }}
           >

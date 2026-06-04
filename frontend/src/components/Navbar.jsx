@@ -16,6 +16,7 @@ export default function Navbar() {
 
   const handleLogout = () => {
     localStorage.removeItem("username");
+    localStorage.removeItem("user_id");
     setUsername("");
     setShowLogoutPopup(false);
     navigate("/home");
