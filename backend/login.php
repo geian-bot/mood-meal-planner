@@ -28,7 +28,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
 }
 
 include "db.php";
-// ... rest of your file stays exactly the same
+
 if ($_SERVER["REQUEST_METHOD"] !== "POST") {
     echo json_encode([
         "success" => false,
@@ -69,7 +69,8 @@ if ($result->num_rows > 0) {
         echo json_encode([
             "success" => true,
             "message" => "Login successful",
-            "username" => $user["username"]
+            "username" => $user["username"],
+            "user_id"  => $user["id"]
         ]);
 
     } else {

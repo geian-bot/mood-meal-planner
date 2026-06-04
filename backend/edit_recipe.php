@@ -1,5 +1,4 @@
 <?php
-session_start();
 
 $origin = $_SERVER['HTTP_ORIGIN'] ?? '';
 $allowed_origins = [
@@ -13,13 +12,14 @@ $is_allowed = in_array($origin, $allowed_origins) ||
 if ($is_allowed) {
     header("Access-Control-Allow-Origin: $origin");
     header("Access-Control-Allow-Credentials: true");
-    header("Access-Control-Allow-Headers: Content-Type");
+    header("Access-Control-Allow-Headers: Content-Type, X-User-Id");
     header("Access-Control-Allow-Methods: POST, OPTIONS");
 }
 header("Content-Type: application/json");
 if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') { http_response_code(204); exit; }
 
-if (!isset($_SESSION['user_id'])) {
+$user_id = intval($_SERVER['HTTP_X_USER_ID'] ?? 0);
+if (!$user_id) {
     echo json_encode(["success" => false, "message" => "Not logged in"]);
     exit;
 }
@@ -29,7 +29,6 @@ include "db.php";
 $data = json_decode(file_get_contents("php://input"), true);
 
 $id           = intval($data['id'] ?? 0);
-$user_id      = $_SESSION['user_id'];
 $name         = $data['name'] ?? '';
 $description  = $data['description'] ?? '';
 $category     = $data['category'] ?? '';
