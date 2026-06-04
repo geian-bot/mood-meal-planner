@@ -11,8 +11,17 @@ export default function Navbar() {
   const { username, setUsername } = useContext(MealContext);
 
   const [showLogoutPopup, setShowLogoutPopup] = useState(false);
+  const [sidebarOpen, setSidebarOpen] = useState(false);
 
   const displayName = username || localStorage.getItem("username");
+
+  const toggleSidebar = () => {
+    setSidebarOpen((prev) => !prev);
+  };
+
+  const closeSidebar = () => {
+    setSidebarOpen(false);
+  };
 
   const handleLogout = () => {
     localStorage.removeItem("username");
@@ -27,34 +36,41 @@ export default function Navbar() {
     if (!search.trim()) return;
     navigate(`/recipes?search=${search}`);
     setSearch("");
+    closeSidebar();
   };
 
   const handleKeyDown = (e) => {
-    if (e.key === "Enter") {
-      handleSearch();
-    }
+    if (e.key === "Enter") handleSearch();
   };
-  
+
   return (
     <nav className="navbar">
-
-      {/* RIGHT - LINKS */}
       <div className="nav-links">
+
+        {/* LEFT */}
         <div className="nav-left">
+          <button className="hamburger-btn" onClick={toggleSidebar}>
+            <span></span>
+            <span></span>
+            <span></span>
+          </button>
+
           <img src={logo} alt="Cook Orbit" className="logo" />
           <h2>Cook Orbit</h2>
-      </div>
-
-        <div className="nav-center">
-           <input
-              type="text"
-              placeholder="Search recipes..."
-              value={search}
-              onChange={(e) => setSearch(e.target.value)}
-              onKeyDown={handleKeyDown}
-            />
         </div>
 
+        {/* CENTER */}
+        <div className="nav-center">
+          <input
+            type="text"
+            placeholder="Search recipes..."
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            onKeyDown={handleKeyDown}
+          />
+        </div>
+
+        {/* RIGHT */}
         <div className="nav-right">
           <Link to="/home">Home</Link>
 
@@ -68,13 +84,11 @@ export default function Navbar() {
           </div>
 
           <Link to="/calendar">Calendar</Link>
-
           <Link to="/about">About Us</Link>
 
           <div className="profile">
             {displayName ? (
               <span
-                className="profile-user"
                 onClick={() => setShowLogoutPopup(true)}
                 style={{ cursor: "pointer" }}
               >
@@ -85,27 +99,73 @@ export default function Navbar() {
             )}
           </div>
         </div>
-
-        {/* Recipes Dropdown */}
-        
-
-        {/* PROFILE */}
-        
       </div>
+
+      {/* SIDEBAR OVERLAY */}
+      <div
+        className={`sidebar-overlay ${sidebarOpen ? "open" : ""}`}
+        onClick={closeSidebar}
+      />
+
+      {/* SIDEBAR */}
+      <div className={`sidebar ${sidebarOpen ? "open" : ""}`}>
+        <div className="sidebar-header">
+          <div className="sidebar-brand">
+            <img src={logo} alt="logo" className="logo" />
+            <h2>Cook Orbit</h2>
+          </div>
+
+          <button className="sidebar-close-btn" onClick={closeSidebar}>
+            ✕
+          </button>
+        </div>
+
+        <div className="sidebar-search">
+          <input
+            type="text"
+            placeholder="Search recipes..."
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            onKeyDown={handleKeyDown}
+          />
+        </div>
+
+        <div className="sidebar-nav">
+          <Link to="/home" className="sidebar-link" onClick={closeSidebar}>
+            🏠 Home
+          </Link>
+
+          <div className="sidebar-section-label">Recipes</div>
+
+          <Link to="/recipes" className="sidebar-sub-link" onClick={closeSidebar}>
+            View All
+          </Link>
+          <Link to="/saved" className="sidebar-sub-link" onClick={closeSidebar}>
+            Saved
+          </Link>
+          <Link to="/created" className="sidebar-sub-link" onClick={closeSidebar}>
+            Created
+          </Link>
+
+          <Link to="/calendar" className="sidebar-link" onClick={closeSidebar}>
+            📅 Calendar
+          </Link>
+
+          <Link to="/about" className="sidebar-link" onClick={closeSidebar}>
+            ℹ️ About Us
+          </Link>
+        </div>
+      </div>
+
+      {/* LOGOUT POPUP */}
       {showLogoutPopup && (
         <div className="logout-overlay">
           <div className="logout-popup">
             <h3>Log Out?</h3>
-
-            <p>
-              Are you sure you want to log out?
-            </p>
+            <p>Are you sure you want to log out?</p>
 
             <div className="logout-actions">
-              <button
-                className="logout-yes"
-                onClick={handleLogout}
-              >
+              <button className="logout-yes" onClick={handleLogout}>
                 Yes
               </button>
 

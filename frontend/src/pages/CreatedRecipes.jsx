@@ -29,19 +29,32 @@ export default function SavedRecipes() {
   useEffect(() => {
     const fetchRecipes = async () => {
       try {
+        const user_id = localStorage.getItem("user_id");
+
         const res = await fetch(API.getRecipes, {
-            credentials: "include",
-            headers: { "X-User-Id": localStorage.getItem("user_id") || "" }
+          credentials: "include",
+          headers: {
+            "Content-Type": "application/json",
+            ...(user_id ? { "X-User-Id": user_id } : {}),
+          },
         });
+
         const data = await res.json();
-        if (data.success) setRecipes(data.recipes);
-        else navigate("/login");
+
+        if (data.success) {
+          setRecipes(data.recipes);
+        } else {
+          setRecipes([]); // 👈 IMPORTANT FIX (NO LOGIN REDIRECT)
+        }
+
       } catch (err) {
         console.error(err);
+        setRecipes([]);
       } finally {
         setLoading(false);
       }
     };
+
     fetchRecipes();
   }, []);
 

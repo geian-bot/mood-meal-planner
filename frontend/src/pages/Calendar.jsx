@@ -648,9 +648,9 @@ export default function CalendarPage() {
       <div className="cal-layout">
         {/* ── SIDEBAR ── */}
         <aside className={`cal-sidebar ${sidebarOpen ? "open" : "closed"}`}>
-          <button className="sidebar-toggle" onClick={() => setSidebarOpen(!sidebarOpen)}>
-            {sidebarOpen ? "◀" : "▶"}
-          </button>
+           <button className="sidebar-toggle" onClick={() => setSidebarOpen(!sidebarOpen)}>
+              {sidebarOpen ? "◀" : "▶"}
+            </button>
 
           {sidebarOpen && (
             <>
