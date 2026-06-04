@@ -16,6 +16,7 @@ export default function Navbar() {
 
   const handleLogout = () => {
     localStorage.removeItem("username");
+    localStorage.removeItem("user_id");
     setUsername("");
     setShowLogoutPopup(false);
     navigate("/home");
@@ -61,7 +62,7 @@ export default function Navbar() {
             <div className="dropdown-content">
               <Link to="/recipes">View All</Link>
               <Link to="/saved">Saved</Link>
-              <Link to="/createrecipe">Created</Link>
+              <Link to="/created">Created</Link>
             </div>
           </div>
 

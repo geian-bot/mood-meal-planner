@@ -1,16 +1,19 @@
 const BASE_URL = import.meta.env.VITE_BACKEND_URL || "http://localhost/MOOD-MEAL-PLANNER/backend";
 
 export const API = {
-  login:        `${BASE_URL}/login.php`,
-  register:     `${BASE_URL}/register.php`,
-  checkSession: `${BASE_URL}/check_session.php`,
-  saveRecipe:   `${BASE_URL}/save_recipe.php`,
-  getRecipes:   `${BASE_URL}/get_recipes.php`,
-  editRecipe:   `${BASE_URL}/edit_recipe.php`,
-  deleteRecipe: `${BASE_URL}/delete_recipe.php`,
-  saveMeal:     `${BASE_URL}/save_meal.php`,
-  getMeals:     `${BASE_URL}/get_meals.php`,
-  deleteMeal:   `${BASE_URL}/delete_meal.php`,
+  login:          `${BASE_URL}/login.php`,
+  register:       `${BASE_URL}/register.php`,
+  checkSession:   `${BASE_URL}/check_session.php`,
+  saveRecipe:     `${BASE_URL}/save_recipe.php`,
+  getRecipes:     `${BASE_URL}/get_recipes.php`,
+  editRecipe:     `${BASE_URL}/edit_recipe.php`,
+  deleteRecipe:   `${BASE_URL}/delete_recipe.php`,
+  saveMeal:       `${BASE_URL}/save_meal.php`,
+  getMeals:       `${BASE_URL}/get_meals.php`,
+  deleteMeal:     `${BASE_URL}/delete_meal.php`,
+  saveBookmark:   `${BASE_URL}/save_bookmark.php`,
+  getBookmarks:   `${BASE_URL}/get_bookmarks.php`,
+  deleteBookmark: `${BASE_URL}/delete_bookmark.php`,
 };
 
 export default BASE_URL;

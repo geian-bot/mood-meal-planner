@@ -9,6 +9,7 @@ import About from "./pages/About.jsx";
 import Calendar from "./pages/Calendar.jsx";
 import CreateRecipe from "./pages/Createrecipe.jsx";
 import SavedRecipes from "./pages/SavedRecipes.jsx";
+import CreatedRecipes from "./pages/CreatedRecipes.jsx";
 
 function App() {
   return (
@@ -24,6 +25,7 @@ function App() {
 
         {/* Main Pages */}
         <Route path="/saved" element={<SavedRecipes />} />
+        <Route path="/created" element={<CreatedRecipes />} />
         <Route path="/createrecipe" element={<CreateRecipe />} />
         <Route path="/recipes" element={<Recipes />} />
         <Route path="/recipe/:id" element={<RecipeDetails />} />
