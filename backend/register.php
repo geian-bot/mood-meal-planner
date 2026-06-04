@@ -7,7 +7,8 @@ $allowed_origins = [
 ];
 
 $is_allowed = in_array($origin, $allowed_origins) ||
-              preg_match('/^https:\/\/mood-meal-planner.*\.vercel\.app$/', $origin);
+              preg_match('/^https:\/\/mood-meal-planner.*\.vercel\.app$/', $origin) ||
+              preg_match('/^http:\/\/localhost:\d+$/', $origin);
 
 if ($is_allowed) {
     header("Access-Control-Allow-Origin: $origin");
