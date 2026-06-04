@@ -133,10 +133,10 @@ export default function CreateRecipe() {
     } catch (err) {
       console.error(err);
       alert("Server error. Please try again.");
-    } finally {
-      setSaving(false);
-    }
-  };
+      } finally {
+        setSaving(false);
+      }
+    };
 
   return (
     <div className="cr-page">
