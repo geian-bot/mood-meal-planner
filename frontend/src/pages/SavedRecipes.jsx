@@ -14,21 +14,36 @@ export default function SavedRecipes() {
   useEffect(() => {
     const fetchBookmarks = async () => {
       const user_id = localStorage.getItem("user_id");
-      if (!user_id) { navigate("/login"); return; }
+
+      // ── GUEST MODE ──
+      if (!user_id) {
+        setBookmarks([]);
+        setLoading(false);
+        return;
+      }
+
       try {
         const res = await fetch(API.getBookmarks, {
           credentials: "include",
           headers: { "X-User-Id": user_id }
         });
+
         const data = await res.json();
-        if (data.success) setBookmarks(data.bookmarks);
-        else navigate("/login");
+
+        if (data.success) {
+          setBookmarks(data.bookmarks);
+        } else {
+          setBookmarks([]);
+        }
+
       } catch (err) {
         console.error(err);
+        setBookmarks([]);
       } finally {
         setLoading(false);
       }
     };
+
     fetchBookmarks();
   }, []);
 

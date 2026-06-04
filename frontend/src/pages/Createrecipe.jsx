@@ -77,31 +77,48 @@ export default function CreateRecipe() {
 
   const handleSave = async () => {
     if (!validate()) {
-      document.querySelector(".field-error")?.scrollIntoView({ behavior: "smooth", block: "center" });
+      document.querySelector(".field-error")?.scrollIntoView({
+        behavior: "smooth",
+        block: "center",
+      });
       return;
     }
+
+    const user_id = localStorage.getItem("user_id");
+    const isGuest = !user_id;
+
     setSaving(true);
 
     const cleanIngredients = ingredients.filter((i) => i.name.trim());
 
+    if (isGuest) {
+      alert("Guest mode: recipe will not be saved permanently.");
+
+      setSuccess(true);
+      setTimeout(() => navigate("/recipes"), 1800);
+
+      setSaving(false);
+      return;
+    }
+
     try {
       const res = await fetch(API.saveRecipe, {
         method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            "X-User-Id": localStorage.getItem("user_id") || ""
-          },
-          credentials: "include",
-          body: JSON.stringify({
-          name:         form.name.trim(),
-          description:  form.description.trim(),
-          category:     form.category,
-          mood:         form.mood,
-          prep_time:    parseInt(form.prepTime) || 30,
-          servings:     parseInt(form.servings) || 2,
+        headers: {
+          "Content-Type": "application/json",
+          "X-User-Id": user_id,
+        },
+        credentials: "include",
+        body: JSON.stringify({
+          name: form.name.trim(),
+          description: form.description.trim(),
+          category: form.category,
+          mood: form.mood,
+          prep_time: parseInt(form.prepTime) || 30,
+          servings: parseInt(form.servings) || 2,
           instructions: form.instructions.trim(),
-          ingredients:  cleanIngredients,
-          image:        imagePreview || null,
+          ingredients: cleanIngredients,
+          image: imagePreview || null,
         }),
       });
 
@@ -111,7 +128,7 @@ export default function CreateRecipe() {
         setSuccess(true);
         setTimeout(() => navigate("/saved"), 1800);
       } else {
-        alert(data.message || "Failed to save recipe. Are you logged in?");
+        alert(data.message || "Failed to save recipe.");
       }
     } catch (err) {
       console.error(err);
