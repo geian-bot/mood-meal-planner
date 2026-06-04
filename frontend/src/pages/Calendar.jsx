@@ -218,50 +218,80 @@ export default function CalendarPage() {
     if (!modalDate || !selectedMood || !selectedMealType || !selectedRecipe) return;
 
     const user_id = localStorage.getItem("user_id");
-    if (!user_id) {
-      navigate("/login");
-      return;
-    }
+    const isGuest = !user_id || username === "Guest";
 
     const key = dateKey(modalDate);
 
+    // ── GUEST MODE: save only locally ──
+    if (isGuest) {
+      setMealData((prev) => {
+        const existing = prev[key] || { mood: selectedMood, meals: [] };
+
+        return {
+          ...prev,
+          [key]: {
+            mood: selectedMood,
+            meals: [
+              ...existing.meals,
+              {
+                id: Date.now(), // fake id for guest
+                type: selectedMealType,
+                recipe: selectedRecipe,
+                notes: "",
+              },
+            ],
+          },
+        };
+      });
+
+      setShowAddModal(false);
+      return;
+    }
+
+    // ── LOGGED IN USER: save to backend ──
     try {
       const res = await fetch(API.saveMeal, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          "X-User-Id": user_id
+          "X-User-Id": user_id,
         },
         credentials: "include",
         body: JSON.stringify({
-          date_key:     key,
-          mood_value:   selectedMood.value,
-          mood_emoji:   selectedMood.emoji,
-          mood_label:   selectedMood.label,
-          meal_type:    selectedMealType,
-          recipe_id:    selectedRecipe.idMeal,
-          recipe_name:  selectedRecipe.strMeal,
+          date_key: key,
+          mood_value: selectedMood.value,
+          mood_emoji: selectedMood.emoji,
+          mood_label: selectedMood.label,
+          meal_type: selectedMealType,
+          recipe_id: selectedRecipe.idMeal,
+          recipe_name: selectedRecipe.strMeal,
           recipe_thumb: selectedRecipe.strMealThumb,
-          notes:        "",
+          notes: "",
         }),
       });
 
       const data = await res.json();
-      if (!data.success) { alert("Failed to save meal."); return; }
+      if (!data.success) {
+        alert("Failed to save meal.");
+        return;
+      }
 
-      // update local state with the DB-assigned id
       setMealData((prev) => {
         const existing = prev[key] || { mood: selectedMood, meals: [] };
+
         return {
           ...prev,
           [key]: {
-            meals: [...existing.meals, {
-              id: data.id,
-              type: selectedMealType,
-              mood: selectedMood,
-              recipe: selectedRecipe,
-              notes: "",
-            }],
+            mood: selectedMood,
+            meals: [
+              ...existing.meals,
+              {
+                id: data.id,
+                type: selectedMealType,
+                recipe: selectedRecipe,
+                notes: "",
+              },
+            ],
           },
         };
       });
