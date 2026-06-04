@@ -29,7 +29,10 @@ export default function SavedRecipes() {
   useEffect(() => {
     const fetchRecipes = async () => {
       try {
-        const res = await fetch(API.getRecipes, { credentials: "include" });
+        const res = await fetch(API.getRecipes, {
+            credentials: "include",
+            headers: { "X-User-Id": localStorage.getItem("user_id") || "" }
+        });
         const data = await res.json();
         if (data.success) setRecipes(data.recipes);
         else navigate("/login");
@@ -47,10 +50,13 @@ export default function SavedRecipes() {
     try {
       const res = await fetch(API.deleteRecipe, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
-        credentials: "include",
-        body: JSON.stringify({ id }),
-      });
+        headers: {
+            "Content-Type": "application/json",
+            "X-User-Id": localStorage.getItem("user_id") || ""
+            },
+            credentials: "include",
+            body: JSON.stringify({ id }),
+        });
       const data = await res.json();
       if (data.success) setRecipes((prev) => prev.filter((r) => r.id !== id));
     } catch (err) {
@@ -82,10 +88,13 @@ export default function SavedRecipes() {
     try {
       const res = await fetch(API.editRecipe, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
-        credentials: "include",
-        body: JSON.stringify({ id: editingId, ...editForm }),
-      });
+        headers: {
+            "Content-Type": "application/json",
+            "X-User-Id": localStorage.getItem("user_id") || ""
+            },
+            credentials: "include",
+            body: JSON.stringify({ id: editingId, ...editForm }),
+        });
       const data = await res.json();
       if (data.success) {
         setRecipes((prev) =>

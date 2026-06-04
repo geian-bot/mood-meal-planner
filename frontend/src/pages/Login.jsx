@@ -43,6 +43,7 @@ export default function Login() {
       if (data.success) {
         setUsername(inputUsername);
         localStorage.setItem("username", inputUsername);
+        localStorage.setItem("user_id", String(data.user_id));
         navigate("/calendar");
       } else {
         alert(data.message || "Login failed");

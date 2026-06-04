@@ -87,9 +87,12 @@ export default function CreateRecipe() {
     try {
       const res = await fetch(API.saveRecipe, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
-        credentials: "include",
-        body: JSON.stringify({
+          headers: {
+            "Content-Type": "application/json",
+            "X-User-Id": localStorage.getItem("user_id") || ""
+          },
+          credentials: "include",
+          body: JSON.stringify({
           name:         form.name.trim(),
           description:  form.description.trim(),
           category:     form.category,
