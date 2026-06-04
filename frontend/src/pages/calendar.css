@@ -839,7 +839,12 @@
 
 .modal-back:hover { background: var(--green-pale); }
 
-.modal-save.full { width: 100%; margin-top: 12px; text-align: center; }
+.modal-save.full { 
+  width: 100%; 
+  margin-top: 12px; 
+  text-align: center; 
+  align-self: flex-end;
+}
 .modal-next.full { width: 100%; }
 
 /* form */

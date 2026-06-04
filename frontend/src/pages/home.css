@@ -881,7 +881,7 @@ body {
   display: inline-flex;
   align-items: center;
   gap: 10px;
-  align-self: flex-start;
+  align-self: center;
   background: var(--green-deep);
   color: white;
   border: none;
