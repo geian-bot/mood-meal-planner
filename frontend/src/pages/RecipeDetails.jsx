@@ -2,6 +2,7 @@ import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import Navbar from "../components/Navbar";
 import "./recipedetails.css";
+import { API } from "../utils/api";
 
 export default function RecipeDetails() {
   const location = useLocation();
@@ -11,6 +12,7 @@ export default function RecipeDetails() {
   const [recipe, setRecipe] = useState(location.state?.recipe || null);
   const [loading, setLoading] = useState(!location.state?.recipe);
   const [saved, setSaved] = useState(false);
+  const [bookmarkLoading, setBookmarkLoading] = useState(false);
 
   useEffect(() => {
     const fetchRecipe = async () => {
@@ -61,6 +63,26 @@ export default function RecipeDetails() {
 
     fetchRecipe();
   }, [id]);
+
+  useEffect(() => {
+    const checkBookmark = async () => {
+      const user_id = localStorage.getItem("user_id");
+      if (!user_id || !recipe) return;
+      try {
+        const res = await fetch(API.getBookmarks, {
+          credentials: "include",
+          headers: { "X-User-Id": user_id }
+        });
+        const data = await res.json();
+        if (data.success) {
+          setSaved(data.bookmarks.some((b) => b.recipe_id === recipe.idMeal));
+        }
+      } catch (err) {
+        console.error(err);
+      }
+    };
+    checkBookmark();
+  }, [recipe]);
 
   if (loading) {
     return (
@@ -146,7 +168,39 @@ export default function RecipeDetails() {
           </div>
           <button
             className={`rd-save-btn ${saved ? "rd-save-btn--saved" : ""}`}
-            onClick={() => setSaved((s) => !s)}
+            onClick={async () => {
+              const user_id = localStorage.getItem("user_id");
+              if (!user_id) { navigate("/login"); return; }
+              setBookmarkLoading(true);
+              try {
+                if (!saved) {
+                  await fetch(API.saveBookmark, {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json", "X-User-Id": user_id },
+                    credentials: "include",
+                    body: JSON.stringify({
+                      recipe_id:       recipe.idMeal,
+                      recipe_name:     recipe.strMeal,
+                      recipe_thumb:    recipe.strMealThumb,
+                      recipe_category: recipe.strCategory || "",
+                    }),
+                  });
+                } else {
+                  await fetch(API.deleteBookmark, {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json", "X-User-Id": user_id },
+                    credentials: "include",
+                    body: JSON.stringify({ recipe_id: recipe.idMeal }),
+                  });
+                }
+                setSaved((s) => !s);
+              } catch (err) {
+                console.error(err);
+              } finally {
+                setBookmarkLoading(false);
+              }
+            }}
+            
             aria-label={saved ? "Unsave recipe" : "Save recipe"}
           >
             <svg className="rd-heart-icon" viewBox="0 0 24 24" fill={saved ? "currentColor" : "none"} stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">

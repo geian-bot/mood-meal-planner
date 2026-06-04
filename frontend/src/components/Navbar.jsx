@@ -62,7 +62,7 @@ export default function Navbar() {
             <div className="dropdown-content">
               <Link to="/recipes">View All</Link>
               <Link to="/saved">Saved</Link>
-              <Link to="/createrecipe">Created</Link>
+              <Link to="/created">Created</Link>
             </div>
           </div>
 
