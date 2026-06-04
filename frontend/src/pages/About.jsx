@@ -1,65 +1,11 @@
 import Navbar from "../components/Navbar";
 import "./about.css";
+import logo from "../assets/cook-orbit.png";
 
 export default function About() {
   return (
     <div className="about-page">
         <Navbar />
-
-      {/* HERO */}
-      <section className="about-hero">
-        <div className="hero-left">
-          <p className="hero-eyebrow fade-up">About Cook Orbit</p>
-          <h1 className="hero-title fade-up delay-1">
-            Plan <em>Smarter.</em><br />Eat Better.<br />Feel Better.
-          </h1>
-          <p className="hero-desc fade-up delay-2">
-            We believe food is more than fuel — it shapes how you feel, think, and live.
-            Cook Orbit helps you find the right meal for the right moment.
-          </p>
-          <button className="hero-cta fade-up delay-3">Start Planning →</button>
-        </div>
-
-        <div className="hero-right fade-up delay-2">
-          <div className="orbit-wrapper">
-            <div className="orbit-ring orbit-ring-2"><div className="orbit-dot"></div></div>
-            <div className="orbit-ring orbit-ring-1"><div className="orbit-dot accent-dot"></div></div>
-            <div className="hero-visual"></div>
-          </div>
-        </div>
-      </section>
-
-      {/* STATS STRIP */}
-      <div className="stats-strip">
-        <div className="stat-item">
-          <div className="stat-icon">😊</div>
-          <div>
-            <div className="stat-label">Mood-Based Meals</div>
-            <div className="stat-sub">Recipes matched to how you feel</div>
-          </div>
-        </div>
-        <div className="stat-item">
-          <div className="stat-icon">🍽</div>
-          <div>
-            <div className="stat-label">Recipe Explorer</div>
-            <div className="stat-sub">Browse hundreds of dishes</div>
-          </div>
-        </div>
-        <div className="stat-item">
-          <div className="stat-icon">🔥</div>
-          <div>
-            <div className="stat-label">Nutrition Tracking</div>
-            <div className="stat-sub">Calories, protein & more</div>
-          </div>
-        </div>
-        <div className="stat-item">
-          <div className="stat-icon">📅</div>
-          <div>
-            <div className="stat-label">Smart Planner</div>
-            <div className="stat-sub">Plan daily, weekly, monthly</div>
-          </div>
-        </div>
-      </div>
 
       {/* WHAT IS COOK ORBIT */}
       <section className="section what-is-section">
@@ -151,7 +97,6 @@ export default function About() {
         <div className="steps-grid">
           <div className="step">
             <div className="step-num">01</div>
-            <div className="step-icon">😊</div>
             <div className="step-title">Choose your mood</div>
             <div className="step-body">
               Select how you're feeling and let Cook Orbit find recipes that
@@ -160,7 +105,6 @@ export default function About() {
           </div>
           <div className="step">
             <div className="step-num">02</div>
-            <div className="step-icon">🔍</div>
             <div className="step-title">Get meal suggestions</div>
             <div className="step-body">
               Browse a curated selection of recipes tailored to your mood,
@@ -169,7 +113,6 @@ export default function About() {
           </div>
           <div className="step">
             <div className="step-num">03</div>
-            <div className="step-icon">📅</div>
             <div className="step-title">Plan your meals</div>
             <div className="step-body">
               Use the meal planner calendar to organize your meals and stay
@@ -178,7 +121,6 @@ export default function About() {
           </div>
           <div className="step">
             <div className="step-num">04</div>
-            <div className="step-icon">❤️</div>
             <div className="step-title">Save your favorites</div>
             <div className="step-body">
               Build a personal collection of go-to recipes and track your
@@ -203,8 +145,8 @@ export default function About() {
           <div className="team-card">
             <div className="team-card-top tc-green">🧑‍💻</div>
             <div className="team-card-body">
-              <div className="tc-name">Alex Reyes</div>
-              <div className="tc-role">Lead Developer</div>
+              <div className="tc-name">Geian Natividad</div>
+              <div className="tc-role">Backend Developer</div>
               <div className="tc-bio">
                 Built the core platform and meal recommendation engine.
                 Passionate about clean code and great food.
@@ -215,7 +157,7 @@ export default function About() {
           <div className="team-card">
             <div className="team-card-top tc-gold">🎨</div>
             <div className="team-card-body">
-              <div className="tc-name">Jamie Cruz</div>
+              <div className="tc-name">Ysabelle Estabaya</div>
               <div className="tc-role">UI/UX Designer</div>
               <div className="tc-bio">
                 Crafted the visual experience from the ground up, making every
@@ -227,8 +169,8 @@ export default function About() {
           <div className="team-card">
             <div className="team-card-top tc-sage">🥗</div>
             <div className="team-card-body">
-              <div className="tc-name">Sam Lim</div>
-              <div className="tc-role">Nutrition Researcher</div>
+              <div className="tc-name">Alliyah Bibat</div>
+              <div className="tc-role">Backend Developer</div>
               <div className="tc-bio">
                 Ensured every mood-to-meal pairing is backed by thoughtful
                 nutritional insight and real science.
@@ -247,6 +189,66 @@ export default function About() {
         <button className="cta-btn-dark">Start Planning →</button>
       </div>
 
+      {/* ── FOOTER ── */}
+      <footer className="site-footer">
+        <div className="footer-top">
+          <div className="footer-brand">
+            <img src={logo} alt="Cook Orbit" className="footer-logo" />
+            <div>
+              <p className="footer-brand-name">Cook Orbit</p>
+              <p className="footer-brand-desc">
+                Mood-based meal planning with nutrition tracking — eat well, feel better.
+              </p>
+            </div>
+          </div>
+
+          <div className="footer-links-group">
+            <p className="footer-group-title">Navigate</p>
+            <a href="/recipes">Recipe Explorer</a>
+            <a href="/calendar">Meal Calendar</a>
+            <a href="/createrecipe">Create Recipe</a>
+            <a href="/login">Sign In</a>
+          </div>
+
+          <div className="footer-links-group">
+            <p className="footer-group-title">Contact</p>
+            <a href="mailto:hello@cookorbit.app">hello@cookorbit.app</a>
+            <p className="footer-contact-note">We'd love to hear from you.</p>
+          </div>
+
+          <div className="footer-links-group">
+            <p className="footer-group-title">Follow Us</p>
+            <div className="footer-socials">
+              <a href="#" className="social-link" aria-label="Instagram">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" width="18" height="18">
+                  <rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/>
+                </svg>
+                Instagram
+              </a>
+              <a href="#" className="social-link" aria-label="Twitter/X">
+                <svg viewBox="0 0 24 24" fill="currentColor" width="18" height="18">
+                  <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.747l7.73-8.835L1.254 2.25H8.08l4.261 5.635zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
+                </svg>
+                Twitter / X
+              </a>
+              <a href="#" className="social-link" aria-label="Facebook">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" width="18" height="18">
+                  <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/>
+                </svg>
+                Facebook
+              </a>
+            </div>
+          </div>
+        </div>
+
+        <div className="footer-bottom">
+          <p>© {new Date().getFullYear()} Cook Orbit. All rights reserved.</p>
+          <div className="footer-bottom-links">
+            <a href="#">Privacy Policy</a>
+            <a href="#">Terms of Use</a>
+          </div>
+        </div>
+      </footer>
     </div>
   );
 }
