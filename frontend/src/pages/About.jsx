@@ -1,6 +1,9 @@
 import Navbar from "../components/Navbar";
 import "./about.css";
 import logo from "../assets/cook-orbit.png";
+import geian from "../assets/geian.jpg";
+import ysabelle from "../assets/ysabelle.jpg";
+import alliyah from "../assets/alliyah.png";
 
 export default function About() {
   return (
@@ -143,7 +146,9 @@ export default function About() {
 
         <div className="team-grid">
           <div className="team-card">
-            <div className="team-card-top tc-green">🧑‍💻</div>
+            <div className="team-card-top tc-green">
+              <img src={geian} alt="Geian Natividad" className="tc-photo" />
+            </div>
             <div className="team-card-body">
               <div className="tc-name">Geian Natividad</div>
               <div className="tc-role">Backend Developer</div>
@@ -155,7 +160,9 @@ export default function About() {
           </div>
 
           <div className="team-card">
-            <div className="team-card-top tc-gold">🎨</div>
+            <div className="team-card-top tc-gold">
+              <img src={ysabelle} alt="Ysabelle Estabaya" className="tc-photo" />
+            </div>
             <div className="team-card-body">
               <div className="tc-name">Ysabelle Estabaya</div>
               <div className="tc-role">UI/UX Designer</div>
@@ -167,7 +174,9 @@ export default function About() {
           </div>
 
           <div className="team-card">
-            <div className="team-card-top tc-sage">🥗</div>
+            <div className="team-card-top tc-sage">
+              <img src={alliyah} alt="Alliyah Bibat" className="tc-photo" />
+            </div>
             <div className="team-card-body">
               <div className="tc-name">Alliyah Bibat</div>
               <div className="tc-role">Backend Developer</div>
