@@ -8,6 +8,9 @@ export const API = {
   getRecipes:   `${BASE_URL}/get_recipes.php`,
   editRecipe:   `${BASE_URL}/edit_recipe.php`,
   deleteRecipe: `${BASE_URL}/delete_recipe.php`,
+  saveMeal:     `${BASE_URL}/save_meal.php`,
+  getMeals:     `${BASE_URL}/get_meals.php`,
+  deleteMeal:   `${BASE_URL}/delete_meal.php`,
 };
 
 export default BASE_URL;
